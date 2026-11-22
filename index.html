@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cric On Pro — Interactive Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,400..600,0..1,0&display=block" rel="stylesheet">
+<style>
+:root{
+  --pitch:#0F7A3A;--deep:#0B4D2A;--ball:#7ED957;
+  --bg:#F6F8F7;--surface:#fff;--ink:#0E1A14;--muted:#5B6B63;--divider:#E2E8E5;--chip:#EEF2F0;
+  --primary:#0F7A3A;--onprimary:#fff;--live:#E5383B;--four:#1E6FD9;--six:#7B3FE4;--wkt:#D62828;--warn:#B7791F;
+  --h1:#0B4D2A;--h2:#13924A;
+}
+.dark{--bg:#0B1210;--surface:#131C19;--ink:#EAF2EE;--muted:#9AABA3;--divider:#24322D;--chip:#1C2925;--primary:#34C46A;--onprimary:#04160C;
+  --live:#FF5A5F;--four:#5B9BFF;--six:#A77BFF;--wkt:#FF6B6B;--warn:#F0B44C;--h1:#0E2A1B;--h2:#145A33}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#dfe7e3;font-family:Inter,system-ui,sans-serif;color:var(--ink)}
+body{display:flex;align-items:center;justify-content:center;gap:40px;padding:16px;min-height:100%;overflow:auto}
+.side{max-width:300px;color:#24352d;font-size:14px;line-height:1.55}
+.side h1{font-size:22px;margin:0 0 6px;color:#0B4D2A;font-weight:900;letter-spacing:.5px}
+.side .tip{background:#fff;border-radius:12px;padding:12px 14px;margin:10px 0;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.side b{color:#0B4D2A}
+.phone{width:390px;height:844px;border-radius:46px;background:#111;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,.25);flex-shrink:0}
+#app{width:100%;height:100%;border-radius:36px;overflow:hidden;background:var(--bg);position:relative;display:flex;flex-direction:column}
+@media (max-width:820px){html,body{height:100%;overflow:hidden}body{padding:0;display:block;min-height:0}.side{display:none}
+  .phone{width:100%!important;height:100vh;height:100dvh;border-radius:0;padding:0;box-shadow:none;zoom:1!important}
+  #app{border-radius:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}}
+@media (max-height:700px){.sbtn{height:clamp(44px,8.5dvh,66px)}.sbtn.o{height:clamp(40px,7dvh,54px)}}
+[dir=rtl] #app, #app[dir=rtl]{font-family:'Noto Nastaliq Urdu',Inter,sans-serif}
+#app[dir=rtl] .ur-lh{line-height:2}
+.ms{font-family:"Material Symbols Rounded";font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;font-feature-settings:"liga"}
+.noicons .ms{display:none}
+.ms.f{font-variation-settings:"FILL" 1}
+#app[dir=rtl] .flip{transform:scaleX(-1)}
+.num{font-family:Inter,sans-serif;font-variant-numeric:tabular-nums}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.appbar{display:flex;align-items:center;gap:8px;padding:14px 16px 10px;background:var(--bg);min-height:56px}
+.appbar h2{margin:0;font-size:19px;font-weight:800;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{width:40px;height:40px;border-radius:20px;border:0;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer;font-size:20px}
+.iconbtn:active{background:rgba(0,0,0,.06)}
+.logo{height:32px;border-radius:6px}
+.brandtxt{font-weight:900;letter-spacing:1px;font-size:15px}
+.sec{display:flex;align-items:center;padding:20px 16px 8px;gap:8px}
+.sec h3{margin:0;font-size:16px;font-weight:700;flex:1}
+.link{color:var(--primary);font-weight:700;font-size:13px;background:none;border:0;cursor:pointer;font-family:inherit}
+.card{background:var(--surface);border:1px solid var(--divider);border-radius:14px;padding:14px;cursor:pointer;transition:transform .12s}
+.card:active{transform:scale(.985)}
+.pad{padding:0 16px}
+.stack>*+*{margin-top:12px}
+.hrow{display:flex;gap:12px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none}
+.hrow::-webkit-scrollbar{display:none}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.lbl{font-size:11px;letter-spacing:.6px;font-weight:600;color:var(--muted);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1;min-width:0}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700}
+.b-success{background:color-mix(in srgb,var(--primary) 14%,transparent);color:var(--primary)}
+.b-warn{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn)}
+.b-info{background:color-mix(in srgb,var(--four) 14%,transparent);color:var(--four)}
+.b-neutral{background:var(--chip);color:var(--muted)}
+.b-danger{background:color-mix(in srgb,var(--wkt) 14%,transparent);color:var(--wkt)}
+.live{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:99px;background:color-mix(in srgb,var(--live) 13%,transparent);color:var(--live);font-size:11px;font-weight:800;letter-spacing:.8px}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--live);animation:pulse 1.1s infinite alternate}
+@keyframes pulse{from{opacity:.3}to{opacity:1}}
+.tb{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:10px;flex-shrink:0;border:1.5px solid;font-family:Inter}
+.teamline{display:flex;align-items:center;gap:10px;padding:4px 0}
+.teamline .nm{flex:1;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.teamline .sc{font-weight:800;font-size:16px}
+.hero{color:#fff;border:0;background:linear-gradient(135deg,var(--h1),var(--h2));min-width:322px;height:224px;display:flex;flex-direction:column}
+.hero .big{font-size:38px;font-weight:900;line-height:1}
+.livepill{background:var(--live);color:#fff;font-weight:900;font-size:11px;padding:3px 8px;border-radius:99px;letter-spacing:1px}
+.ballc{color:var(--ball)}
+.tour{min-width:240px;height:140px;display:flex;flex-direction:column}
+.avatar{border-radius:50%;display:grid;place-items:center;font-weight:800;background:color-mix(in srgb,var(--primary) 14%,transparent);color:var(--primary);flex-shrink:0;position:relative;font-family:Inter}
+.avatar .vf{position:absolute;inset-inline-end:-3px;bottom:-3px;background:var(--surface);border-radius:50%;width:45%;height:45%;display:grid;place-items:center;color:var(--primary);font-size:10px}
+.nav{display:flex;background:var(--surface);border-top:1px solid var(--divider);padding:6px 4px 10px;flex-shrink:0}
+.nav button{flex:1;border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;padding:4px 0}
+.nav button .ic{font-size:20px;width:56px;height:30px;display:grid;place-items:center;border-radius:15px}
+.nav button.on{color:var(--primary)}
+.nav button.on .ic{background:color-mix(in srgb,var(--primary) 14%,transparent)}
+.btn{width:100%;min-height:52px;border-radius:14px;border:0;background:var(--primary);color:var(--onprimary);font-weight:700;font-size:16px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn.sec2{background:transparent;color:var(--primary);border:1.5px solid color-mix(in srgb,var(--primary) 50%,transparent)}
+.btn:disabled{opacity:.45;cursor:default}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:8px 14px;border-radius:99px;background:var(--chip);border:1.5px solid transparent;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink);font-family:inherit}
+.chip.on{background:color-mix(in srgb,var(--primary) 16%,transparent);border-color:var(--primary);color:var(--primary)}
+.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--divider);padding:0 8px;scrollbar-width:none;flex-shrink:0;background:var(--bg)}
+.tabs button{border:0;background:none;padding:12px 12px;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;font-family:inherit}
+.tabs button.on{color:var(--primary);border-color:var(--primary)}
+.header{background:linear-gradient(135deg,var(--h1),var(--h2));color:#fff;padding:12px 16px 16px;flex-shrink:0}
+.header .iconbtn{color:#fff}
+.balls{display:flex;gap:6px;flex-wrap:wrap}
+.bl{min-width:30px;height:30px;padding:0 7px;border-radius:15px;display:grid;place-items:center;font-weight:800;font-size:13px;background:var(--chip);font-family:Inter}
+.hdr .bl{background:rgba(255,255,255,.16);color:#fff}
+.bl.b4{background:var(--four);color:#fff}.bl.b6{background:var(--six);color:#fff}.bl.bw{background:var(--wkt);color:#fff}
+table.sc{width:100%;border-collapse:collapse;font-size:13px}
+table.sc th{font-size:11px;color:var(--muted);font-weight:600;text-align:end;padding:8px 4px}
+table.sc th:first-child,table.sc td:first-child{text-align:start}
+table.sc td{padding:8px 4px;border-top:1px solid var(--divider);text-align:end;font-family:Inter;font-variant-numeric:tabular-nums}
+table.sc td:first-child{font-family:inherit}
+table.sc tr.q td:first-child{box-shadow:inset 3px 0 0 var(--primary)}
+[dir=rtl] table.sc tr.q td:first-child{box-shadow:inset -3px 0 0 var(--primary)}
+.dis{font-size:11px;color:var(--muted)}
+.list>div{padding:12px 14px;border-top:1px solid var(--divider)}
+.list>div:first-child{border-top:0}
+.kv{display:flex;padding:7px 0}.kv span:first-child{flex:1;color:var(--muted);font-size:13px}.kv span:last-child{font-weight:600}
+/* scorer */
+.pad3{display:grid;gap:10px;padding:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sbtn{height:66px;border-radius:14px;border:0;font-weight:900;font-size:26px;color:#fff;background:var(--primary);cursor:pointer;font-family:Inter;transition:transform .08s}
+.sbtn:active{transform:scale(.95)}
+.sbtn.o{background:var(--surface);color:var(--ink);border:1.5px solid var(--divider);font-size:13px;height:54px;font-family:inherit}
+.syncchip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;background:rgba(0,0,0,.22);font-size:11px;font-weight:800}
+.flash{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:30}
+.flash div{padding:14px 36px;border-radius:20px;color:#fff;font-size:44px;font-weight:900;font-style:italic;animation:pop .95s forwards;font-family:Inter}
+@keyframes pop{0%{transform:scale(.6);opacity:0}15%{transform:scale(1.06);opacity:1}25%{transform:scale(1)}75%{opacity:1}100%{opacity:0;transform:scale(.97)}}
+.batrow{display:flex;align-items:center;gap:6px;height:36px;padding:0 8px;border-radius:8px}
+.batrow.st{background:color-mix(in srgb,var(--primary) 11%,transparent)}
+/* sheets */
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:40;display:flex;align-items:flex-end;animation:fade .18s}
+@keyframes fade{from{opacity:0}}
+.sheet{background:var(--surface);width:100%;border-radius:22px 22px 0 0;padding:10px 16px 22px;max-height:88%;overflow-y:auto;animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:.6}}
+.sheet .handle{width:36px;height:4px;border-radius:2px;background:var(--divider);margin:0 auto 12px}
+.sheet h4{margin:4px 0 12px;font-size:17px}
+.toast{position:absolute;bottom:90px;left:16px;right:16px;background:#1f2a25;color:#fff;padding:12px 16px;border-radius:12px;z-index:50;font-size:14px;animation:up .2s}
+.onb{background:linear-gradient(180deg,var(--h1),var(--h2));color:#fff;flex:1;display:flex;flex-direction:column;padding:20px 24px}
+.onb .dots{display:flex;gap:6px;justify-content:center;margin:16px 0}
+.onb .dots i{width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.3);transition:width .2s}
+.onb .dots i.on{width:22px;background:var(--ball)}
+.onb .ico{width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;font-size:60px;margin:0 auto}
+.btn.ballbtn{background:var(--ball);color:var(--deep)}
+.langopt{height:62px;border-radius:14px;display:flex;align-items:center;padding:0 20px;font-size:20px;font-weight:700;cursor:pointer;margin-bottom:12px;background:rgba(255,255,255,.08)}
+.langopt.on{background:#fff;color:var(--deep)}
+input.field{width:100%;height:56px;border-radius:14px;border:1.5px solid var(--divider);background:var(--surface);color:var(--ink);font-size:20px;padding:0 16px;font-family:Inter;letter-spacing:1.2px}
+input.field:focus{outline:none;border-color:var(--primary)}
+.switch{width:46px;height:28px;border-radius:14px;background:var(--divider);position:relative;cursor:pointer;flex-shrink:0;border:0}
+.switch::after{content:'';position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:inset .2s}
+.switch.on{background:var(--primary)}.switch.on::after{inset-inline-start:21px}
+.prog{height:6px;border-radius:3px;background:var(--chip);overflow:hidden;margin-top:5px}.prog i{display:block;height:100%;background:var(--primary)}
+.form{display:flex;gap:4px}.form i{width:24px;height:24px;border-radius:6px;color:#fff;font-weight:800;font-size:11px;display:grid;place-items:center;font-style:normal}
+.fab{position:absolute;bottom:86px;inset-inline-end:16px;z-index:10;box-shadow:0 6px 18px rgba(0,0,0,.2);width:auto;padding:0 20px;border-radius:16px}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.statgrid b{display:block;font-size:20px;font-family:Inter;font-variant-numeric:tabular-nums}
+.statgrid span{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="side">
+  <h1>CRIC ON PRO</h1>
+  <div>Interactive demo of the iOS / Android app. It runs the <b>same scoring engine</b> as the backend, with fictional Lahore teams.</div>
+  <div class="tip">📱 <b>Sign in</b>: any 3XX number with OTP <b>123456</b>, or tap a role (Spectator, Scorer…).</div>
+  <div class="tip">🏏 <b>Score a match</b>: sign in as <b>Scorer</b>. Continue the live match, or start the Qualifier from the toss.</div>
+  <div class="tip">📶 <b>Offline test</b>: in the scorer console tap the cloud chip to go offline, score balls, then go back online and watch them sync.</div>
+  <div class="tip">🌐 Profile → <b>اردو</b> for Urdu (right-to-left) and 🌙 for dark mode.</div>
+</div>
+<div class="phone"><div id="app"></div></div>
+
+<script>
+(function fit(){
+  const ph=document.querySelector('.phone'); if(!ph) return;
+  const apply=()=>{ if (window.innerWidth<=820){ph.style.zoom='';return;}
+    const side=document.querySelector('.side'); const sideW=side && getComputedStyle(side).display!=='none' ? side.offsetWidth+40 : 0;
+    const s=Math.min(1,(window.innerHeight-32)/868,(window.innerWidth-32-sideW)/414);
+    if (s<0.62 && side) side.style.display='none';
+    ph.style.zoom=Math.max(.5,Math.min(1,(window.innerHeight-32)/868)).toFixed(3); };
+  apply(); window.addEventListener('resize',apply);
+})();
+</script>
+<script>var COP=(()=>{var h=Object.defineProperty;var $=Object.getOwnPropertyDescriptor;var A=Object.getOwnPropertyNames;var _=Object.prototype.hasOwnProperty;var j=(e,r)=>{for(var n in r)h(e,n,{get:r[n],enumerable:!0})},D=(e,r,n,i)=>{if(r&&typeof r=="object"||typeof r=="function")for(let s of A(r))!_.call(e,s)&&s!==n&&h(e,s,{get:()=>r[s],enumerable:!(i=$(r,s))||i.enumerable});return e};var U=e=>D(h({},"__esModule",{value:!0}),e);var ce={};j(ce,{DEFAULT_RULES:()=>K,MVP_WEIGHTS:()=>I,aggregateCareer:()=>ae,applyEvent:()=>ie,ballLabel:()=>F,commentaryFor:()=>de,computeResult:()=>S,computeStandings:()=>oe,economy:()=>re,effectiveEvents:()=>E,newMatchState:()=>se,normalizeConfig:()=>B,oversText:()=>Y,replay:()=>Q,requiredRunRate:()=>ee,runRate:()=>Z,strikeRate:()=>te,thisOver:()=>ne});var k=new Set(["bowled","caught","lbw","stumped","hitWicket"]);var c=class extends Error{};function B(e){var r,n,i,s;return{matchId:e.matchId,oversPerInnings:e.oversPerInnings,playersPerSide:e.playersPerSide,ballsPerOver:(r=e.ballsPerOver)!=null?r:6,wideRuns:(n=e.wideRuns)!=null?n:1,noBallRuns:(i=e.noBallRuns)!=null?i:1,inningsCount:(s=e.inningsCount)!=null?s:2}}function E(e){var u;let r=new Map;for(let o of e)r.has(o.id)||r.set(o.id,o);let n=new Map;for(let o of r.values())if(o.type==="void"&&o.void){let l=(u=n.get(o.void.targetId))!=null?u:[];l.push(o),n.set(o.void.targetId,l)}let i=new Map,s=(o,l=0)=>{var d;if(l>64)return!1;let t=i.get(o);if(t!==void 0)return t;let g=((d=n.get(o))!=null?d:[]).some(f=>!s(f.id,l+1));return i.set(o,g),g};return[...r.values()].filter(o=>o.type!=="void"&&!s(o.id)).sort((o,l)=>o.seq-l.seq||o.timestamp-l.timestamp||(o.id<l.id?-1:1))}function G(e,r){return{playerId:e,order:r,runs:0,balls:0,fours:0,sixes:0,dots:0,isOut:!1,retiredHurt:!1}}function X(e){return{playerId:e,balls:0,runs:0,wickets:0,maidens:0,dots:0,wides:0,noBalls:0,fours:0,sixes:0}}function y(e,r){e.batters[r]||(e.batters[r]=G(r,e.battingOrder.length+1),e.battingOrder.push(r))}function C(e,r){e.bowlers[r]||(e.bowlers[r]=X(r),e.bowlingOrder.push(r))}function T(e){!e.strikerId||!e.nonStrikerId||e.partnerships.push({batter1Id:e.strikerId,batter2Id:e.nonStrikerId,runs:0,balls:0,wicketNo:e.wickets+1,unbroken:!0})}function M(e){let r=e.partnerships[e.partnerships.length-1];return r&&r.unbroken?r:void 0}function N(e,r){e.complete||(e.target!==null&&e.total>=e.target?(e.complete=!0,e.endReason="target"):e.wickets>=r.playersPerSide-1?(e.complete=!0,e.endReason="allOut"):e.legalBalls>=r.oversPerInnings*r.ballsPerOver&&(e.complete=!0,e.endReason="overs"))}function J(e,r){return r==="wide"?e==="stumped"||e==="runOut"||e==="hitWicket"||e==="obstructing":r==="noBall"?e==="runOut"||e==="obstructing":!0}function F(e,r){let n=e.wicket&&e.wicket.kind!=="retiredHurt"?"W":"";switch(e.extra){case"wide":return`${r.wideRuns+e.runs}wd${n?"+W":""}`;case"noBall":return`nb${e.runs?"+"+e.runs:""}${n?"+W":""}`;case"bye":return`${e.runs}b${n?"+W":""}`;case"legBye":return`${e.runs}lb${n?"+W":""}`;default:return n?e.runs?`${e.runs}+W`:"W":String(e.runs)}}function L(e,r,n,i,s){var l,t,a,g;let u=e.batters[n.dismissedId];if(!u)throw new c("dismissed batter not at crease");n.kind==="retiredHurt"?u.retiredHurt=!0:(u.isOut=!0,u.dismissal={kind:n.kind,bowlerId:k.has(n.kind)&&i!=null?i:void 0,fielderId:(l=n.fielderId)!=null?l:null}),s&&(e.wickets+=1,e.fow.push({wicketNo:e.wickets,score:e.total,legalBalls:e.legalBalls,playerId:n.dismissedId}));let o=M(e);if(o&&(o.unbroken=!1),i&&k.has(n.kind)&&(e.bowlers[i].wickets+=1),n.fielderId){let d=(g=(t=r.fielding)[a=n.fielderId])!=null?g:t[a]={catches:0,runOuts:0,stumpings:0};n.kind==="caught"?d.catches+=1:n.kind==="runOut"?d.runOuts+=1:n.kind==="stumped"&&(d.stumpings+=1)}e.strikerId===n.dismissedId?e.strikerId=null:e.nonStrikerId===n.dismissedId&&(e.nonStrikerId=null)}function v(e,r){if(e.strikerId&&e.nonStrikerId)throw new c("no vacant batting slot");if(r===e.strikerId||r===e.nonStrikerId)throw new c("batter already at crease");let n=e.batters[r];if(n&&(n.isOut||!n.retiredHurt))throw new c("batter has already batted");n&&(n.retiredHurt=!1),y(e,r),e.strikerId?e.nonStrikerId=r:e.strikerId=r,T(e)}function V(e,r,n){var x,O,W;let i=r.config,s=n.delivery;if(!s)throw new c("missing delivery payload");if(!Number.isInteger(s.runs)||s.runs<0||s.runs>7)throw new c("invalid runs");if(!e.strikerId||!e.nonStrikerId)throw new c("batter required");if(!e.bowlerId)throw new c("bowler required");let u=(x=s.extra)!=null?x:null;if(s.wicket){if(!J(s.wicket.kind,u))throw new c(`${s.wicket.kind} not possible on ${u}`);if(!(s.wicket.dismissedId===e.strikerId||s.wicket.dismissedId===e.nonStrikerId))throw new c("dismissed batter not at crease");if(s.wicket.kind!=="runOut"&&s.wicket.kind!=="obstructing"&&s.wicket.dismissedId!==e.strikerId)throw new c("only the striker can be out this way")}let o=u!=="wide"&&u!=="noBall",l=e.batters[e.strikerId],t=e.bowlers[e.bowlerId],a=e.strikerId,g=e.bowlerId,d=s.runs,f=s.runs;u==="wide"?(d=i.wideRuns+s.runs,f=d,e.extras.wide+=d,t.wides+=1):u==="noBall"?(d=i.noBallRuns+s.runs,f=d,e.extras.noBall+=i.noBallRuns,t.noBalls+=1):u==="bye"?(f=0,e.extras.bye+=s.runs):u==="legBye"&&(f=0,e.extras.legBye+=s.runs),u!=="wide"&&(l.balls+=1),(u===null||u==="noBall")&&(l.runs+=s.runs,s.boundary&&s.runs===4&&(l.fours+=1),s.boundary&&s.runs===6&&(l.sixes+=1),u===null&&s.runs===0&&(l.dots+=1),s.boundary&&s.runs===4&&(t.fours+=1),s.boundary&&s.runs===6&&(t.sixes+=1)),t.runs+=f,e._overCharged+=f,o&&(t.balls+=1,f===0&&(t.dots+=1)),e.total+=d,o&&(e.legalBalls+=1);let m=M(e);m&&(m.runs+=d,o&&(m.balls+=1)),s.runs%2===1&&([e.strikerId,e.nonStrikerId]=[e.nonStrikerId,e.strikerId]);let p=e.legalBalls%i.ballsPerOver===0&&o?i.ballsPerOver:e.legalBalls%i.ballsPerOver,H=Math.floor(o?(e.legalBalls-1)/i.ballsPerOver:e.legalBalls/i.ballsPerOver),R={eventId:n.id,overIndex:H,ballInOver:p,label:F(s,i),strikerId:a,bowlerId:g,runs:s.runs,extra:u,boundary:!!s.boundary,totalRuns:d,wicket:(O=s.wicket)!=null?O:null,legal:o};if(e.balls.push(R),s.wicket){let P=s.wicket.kind!=="retiredHurt";L(e,r,s.wicket,e.bowlerId,P)}o&&e.legalBalls%i.ballsPerOver===0&&(e._overCharged===0&&(t.maidens+=1),e._overCharged=0,[e.strikerId,e.nonStrikerId]=[e.nonStrikerId,e.strikerId],e.lastOverBowlerId=e.bowlerId,e.bowlerId=null),N(e,i),!e.complete&&((W=s.wicket)!=null&&W.newBatterId)&&v(e,s.wicket.newBatterId),r.lastEvent={id:n.id,type:"delivery",label:R.label,wicket:!!s.wicket&&s.wicket.kind!=="retiredHurt"}}function z(e,r,n,i){return{inningsNo:e,battingTeamId:r,bowlingTeamId:n,total:0,wickets:0,legalBalls:0,extras:{wide:0,noBall:0,bye:0,legBye:0},batters:{},bowlers:{},battingOrder:[],bowlingOrder:[],fow:[],partnerships:[],balls:[],strikerId:null,nonStrikerId:null,bowlerId:null,lastOverBowlerId:null,target:i,complete:!1,endReason:null,_overCharged:0}}function q(e,r){var s,u,o,l;let n=e.config;if(r.type==="inningsStart"){let t=r.inningsStart;if(!t)throw new c("missing inningsStart payload");if(e.innings.some(f=>f.inningsNo===r.inningsNo))throw new c("innings already started");if(r.inningsNo>n.inningsCount)throw new c("too many innings");if(t.strikerId===t.nonStrikerId)throw new c("openers must differ");let a=e.innings[e.innings.length-1];a&&!a.complete&&(a.complete=!0,a.endReason=(s=a.endReason)!=null?s:"declared");let g=r.inningsNo===2&&a?a.total+1:null,d=z(r.inningsNo,t.battingTeamId,t.bowlingTeamId,g);y(d,t.strikerId),y(d,t.nonStrikerId),d.strikerId=t.strikerId,d.nonStrikerId=t.nonStrikerId,C(d,t.bowlerId),d.bowlerId=t.bowlerId,T(d),e.innings.push(d),e.lastEvent={id:r.id,type:r.type};return}let i=e.innings.find(t=>t.inningsNo===r.inningsNo);if(!i)throw new c("innings not started");if(i.complete)throw new c("innings complete");switch(r.type){case"delivery":V(i,e,r);break;case"newBatter":if(!r.newBatter)throw new c("missing payload");v(i,r.newBatter.batterId),e.lastEvent={id:r.id,type:r.type};break;case"bowlerChange":{let t=(u=r.bowlerChange)==null?void 0:u.bowlerId;if(!t)throw new c("missing payload");if(i.legalBalls%n.ballsPerOver===0&&t===i.lastOverBowlerId)throw new c("bowler cannot bowl consecutive overs");C(i,t),i.bowlerId=t,e.lastEvent={id:r.id,type:r.type};break}case"swapStrike":[i.strikerId,i.nonStrikerId]=[i.nonStrikerId,i.strikerId],e.lastEvent={id:r.id,type:r.type};break;case"retire":{let t=r.retire;if(!t)throw new c("missing payload");if(t.batterId!==i.strikerId&&t.batterId!==i.nonStrikerId)throw new c("batter not at crease");L(i,e,{kind:t.kind,dismissedId:t.batterId},null,t.kind==="retiredOut"),N(i,n),!i.complete&&t.newBatterId&&v(i,t.newBatterId),e.lastEvent={id:r.id,type:r.type,wicket:t.kind==="retiredOut"};break}case"endInnings":i.complete=!0,i.endReason=(l=(o=r.endInnings)==null?void 0:o.reason)!=null?l:"ended",e.lastEvent={id:r.id,type:r.type};break;default:throw new c(`unknown event type ${r.type}`)}}function S(e){let[r,n]=e.innings,i={type:"inProgress",winnerTeamId:null,marginRuns:null,marginWickets:null};return!r||!n||!r.complete?i:n.target!==null&&n.total>=n.target?{type:"win",winnerTeamId:n.battingTeamId,marginRuns:null,marginWickets:e.config.playersPerSide-1-n.wickets}:n.complete?n.total===r.total?{type:"tie",winnerTeamId:null,marginRuns:null,marginWickets:null}:{type:"win",winnerTeamId:r.battingTeamId,marginRuns:r.total-n.total,marginWickets:null}:i}function Q(e,r){let n={config:B(e),innings:[],fielding:{},result:{type:"inProgress",winnerTeamId:null,marginRuns:null,marginWickets:null},rejected:[],lastEvent:null};for(let i of E(r)){if(i.matchId!==e.matchId){n.rejected.push({eventId:i.id,reason:"wrong match"});continue}let s=JSON.stringify({innings:n.innings,fielding:n.fielding,lastEvent:n.lastEvent});try{q(n,i)}catch(u){if(!(u instanceof c))throw u;let o=JSON.parse(s);n.innings=o.innings,n.fielding=o.fielding,n.lastEvent=o.lastEvent,n.rejected.push({eventId:i.id,reason:u.message})}}for(let i of n.innings)delete i._overCharged;return n.result=S(n),n}function Y(e,r=6){return`${Math.floor(e/r)}.${e%r}`}function Z(e,r,n=6){return r===0?0:e*n/r}function ee(e,r){if(e.target===null)return null;let n=r.oversPerInnings*r.ballsPerOver-e.legalBalls,i=e.target-e.total;return i<=0?0:n<=0?null:i*r.ballsPerOver/n}function te(e,r){return r===0?0:e*100/r}function re(e,r,n=6){return r===0?0:e*n/r}function ne(e,r=6){if(e.balls.length===0)return[];let n=Math.floor(e.legalBalls/r),s=e.legalBalls%r!==0||e.balls[e.balls.length-1].legal===!1?n:n-1;return e.balls.filter(u=>u.overIndex===s)}function se(e){return{config:B(e),innings:[],fielding:{},result:{type:"inProgress",winnerTeamId:null,marginRuns:null,marginWickets:null},rejected:[],lastEvent:null}}function ie(e,r){q(e,r),e.result=S(e)}var K={win:2,tie:1,noResult:1,loss:0,qualifyTop:4};function oe(e,r,n=K){var o;let i=new Map;for(let l of e)i.set(l,{teamId:l,played:0,won:0,lost:0,tied:0,noResult:0,points:0,runsFor:0,ballsFaced:0,runsAgainst:0,ballsBowled:0,nrr:0,position:0,qualified:!1,form:[]});let s=l=>{let t=i.get(l);return t||(t={teamId:l,played:0,won:0,lost:0,tied:0,noResult:0,points:0,runsFor:0,ballsFaced:0,runsAgainst:0,ballsBowled:0,nrr:0,position:0,qualified:!1,form:[]},i.set(l,t)),t};for(let l of r){let t=s(l.teamA),a=s(l.teamB);if(t.played++,a.played++,l.result==="noResult"){t.noResult++,a.noResult++,t.points+=n.noResult,a.points+=n.noResult,t.form.push("N"),a.form.push("N");continue}if(l.result==="tie")t.tied++,a.tied++,t.points+=n.tie,a.points+=n.tie,t.form.push("T"),a.form.push("T");else{let d=l.winnerTeamId===l.teamA?t:a,f=d===t?a:t;d.won++,f.lost++,d.points+=n.win,f.points+=n.loss,d.form.push("W"),f.form.push("L")}let g=l.oversPerInnings*((o=l.ballsPerOver)!=null?o:6);for(let d of l.innings){let f=s(d.teamId),m=d.teamId===l.teamA?a:t,p=d.allOut?g:d.legalBalls;f.runsFor+=d.runs,f.ballsFaced+=p,m.runsAgainst+=d.runs,m.ballsBowled+=p}}let u=[...i.values()];for(let l of u){let t=l.ballsFaced?l.runsFor*6/l.ballsFaced:0,a=l.ballsBowled?l.runsAgainst*6/l.ballsBowled:0;l.nrr=Math.round((t-a)*1e3)/1e3,l.form=l.form.slice(-5)}return u.sort((l,t)=>t.points-l.points||t.nrr-l.nrr||t.won-l.won||l.teamId.localeCompare(t.teamId)),u.forEach((l,t)=>{l.position=t+1,l.qualified=t<n.qualifyTop}),u}var I={run:1,four:1,six:2,fifty:10,hundred:25,wicket:20,maiden:8,dot:1,threeWickets:10,fiveWickets:25,catch:8,runOut:8,stumping:10};function le(e){return{playerId:e,matches:0,batting:{innings:0,notOuts:0,runs:0,balls:0,fours:0,sixes:0,highest:0,highestNotOut:!1,fifties:0,hundreds:0,ducks:0,average:null,strikeRate:0},bowling:{innings:0,balls:0,runs:0,wickets:0,maidens:0,dots:0,bestWickets:0,bestRuns:0,economy:0,average:null,strikeRate:null},fielding:{catches:0,runOuts:0,stumpings:0},mvpPoints:0}}function ae(e,r={}){var s;let n=new Map,i=u=>{let o=n.get(u);return o||(o=le(u),n.set(u,o)),o};for(let u of e){let o=new Set((s=r[u.config.matchId])!=null?s:[]);for(let l of u.innings){for(let t of Object.values(l.batters)){o.add(t.playerId);let a=i(t.playerId).batting;a.innings++;let g=!t.isOut;g&&a.notOuts++,a.runs+=t.runs,a.balls+=t.balls,a.fours+=t.fours,a.sixes+=t.sixes,(t.runs>a.highest||t.runs===a.highest&&g)&&(a.highest=t.runs,a.highestNotOut=g),t.runs>=100?a.hundreds++:t.runs>=50&&a.fifties++,t.runs===0&&t.isOut&&a.ducks++}for(let t of Object.values(l.bowlers)){if(t.balls===0&&t.wides===0&&t.noBalls===0)continue;o.add(t.playerId);let a=i(t.playerId).bowling;a.innings++,a.balls+=t.balls,a.runs+=t.runs,a.wickets+=t.wickets,a.maidens+=t.maidens,a.dots+=t.dots,(a.innings===1||t.wickets>a.bestWickets||t.wickets===a.bestWickets&&t.runs<a.bestRuns)&&(a.bestWickets=t.wickets,a.bestRuns=t.runs);let g=i(t.playerId);t.wickets>=5?g.mvpPoints+=I.fiveWickets:t.wickets>=3&&(g.mvpPoints+=I.threeWickets)}}for(let[l,t]of Object.entries(u.fielding)){o.add(l);let a=i(l).fielding;a.catches+=t.catches,a.runOuts+=t.runOuts,a.stumpings+=t.stumpings}for(let l of o)i(l).matches++}for(let u of n.values()){let o=u.batting,l=o.innings-o.notOuts;o.average=l>0?w(o.runs/l):null,o.strikeRate=o.balls?w(o.runs*100/o.balls):0;let t=u.bowling;t.economy=t.balls?w(t.runs*6/t.balls):0,t.average=t.wickets?w(t.runs/t.wickets):null,t.strikeRate=t.wickets?w(t.balls/t.wickets):null;let a=I;u.mvpPoints+=o.runs*a.run+o.fours*a.four+o.sixes*a.six+o.fifties*a.fifty+o.hundreds*a.hundred+t.wickets*a.wicket+t.maidens*a.maiden+t.dots*a.dot+u.fielding.catches*a.catch+u.fielding.runOuts*a.runOut+u.fielding.stumpings*a.stumping}return n}function w(e){return Math.round(e*100)/100}var b=(e,r)=>{let n=0;for(let i=0;i<r.length;i++)n=n*31+r.charCodeAt(i)>>>0;return e[n%e.length]},ue={en:{six:["SIX! {bat} launches it over the ropes.","SIX! Huge hit from {bat}.","SIX! {bat} clears the boundary with ease."],four:["FOUR! Beautiful shot by {bat}.","FOUR! {bat} finds the gap perfectly.","FOUR! Cracking drive from {bat}."],dot:["Dot ball. Good delivery from {bowl}.","No run. {bowl} keeps it tight.","{bat} defends solidly."],one:["Single taken. Good running between the wickets.","{bat} nudges it for one."],two:["Two runs. {bat} pushes hard for the second.","Well run, two more."],three:["Three runs! Excellent running."],runs:["{runs} runs taken."],wide:["Wide ball from {bowl}.","Wide. {bowl} strays down the leg side."],noBall:["No ball! Free runs for {batting}.","No ball from {bowl}."],bye:["{runs} bye(s). It beats everyone."],legBye:["{runs} leg bye(s) off the pad."],bowled:"WICKET! Clean bowled. {bowl} hits the stumps, {out} has to go.",caught:"WICKET! {out} is caught by {field} off {bowl}.",caughtBowled:"WICKET! Caught and bowled by {bowl}! {out} departs.",lbw:"WICKET! LBW! {bowl} traps {out} in front.",runOut:"WICKET! Run out! {out} is short of the crease{fieldBy}.",stumped:"WICKET! Stumped by {field}. {out} was out of the crease.",hitWicket:"WICKET! Hit wicket. {out} dislodges the bails.",retiredOut:"{out} retires out.",retiredHurt:"{out} retires hurt.",other:"WICKET! {out} is out."},ur:{six:["\u0686\u06BE\u06A9\u0627! {bat} \u0646\u06D2 \u06AF\u06CC\u0646\u062F \u0628\u0627\u0624\u0646\u0688\u0631\u06CC \u0633\u06D2 \u0628\u0627\u06C1\u0631 \u067E\u06BE\u06CC\u0646\u06A9 \u062F\u06CC\u06D4","\u0686\u06BE\u06A9\u0627! {bat} \u06A9\u06CC \u0632\u0628\u0631\u062F\u0633\u062A \u0634\u0627\u0679\u06D4"],four:["\u0686\u0648\u06A9\u0627! {bat} \u06A9\u06CC \u062E\u0648\u0628\u0635\u0648\u0631\u062A \u0634\u0627\u0679\u06D4","\u0686\u0648\u06A9\u0627! {bat} \u0646\u06D2 \u062E\u0644\u0627 \u0688\u06BE\u0648\u0646\u0688 \u0644\u06CC\u0627\u06D4"],dot:["\u06A9\u0648\u0626\u06CC \u0631\u0646 \u0646\u06C1\u06CC\u06BA\u06D4 {bowl} \u06A9\u06CC \u0627\u0686\u06BE\u06CC \u06AF\u06CC\u0646\u062F\u06D4","{bat} \u0646\u06D2 \u0645\u0636\u0628\u0648\u0637 \u062F\u0641\u0627\u0639 \u06A9\u06CC\u0627\u06D4"],one:["\u0627\u06CC\u06A9 \u0631\u0646\u06D4 \u0648\u06A9\u0679\u0648\u06BA \u06A9\u06D2 \u062F\u0631\u0645\u06CC\u0627\u0646 \u0627\u0686\u06BE\u06CC \u062F\u0648\u0691\u06D4"],two:["\u062F\u0648 \u0631\u0646\u0632\u06D4"],three:["\u062A\u06CC\u0646 \u0631\u0646\u0632! \u0628\u06C1\u062A\u0631\u06CC\u0646 \u062F\u0648\u0691\u06D4"],runs:["{runs} \u0631\u0646\u0632\u06D4"],wide:["\u0648\u0627\u0626\u06CC\u0688 \u0628\u0627\u0644\u060C {bowl}\u06D4"],noBall:["\u0646\u0648 \u0628\u0627\u0644! {bowl}\u06D4"],bye:["{runs} \u0628\u0627\u0626\u06CC\u06D4"],legBye:["{runs} \u0644\u06CC\u06AF \u0628\u0627\u0626\u06CC\u06D4"],bowled:"\u0648\u06A9\u0679! \u06A9\u0644\u06CC\u0646 \u0628\u0648\u0644\u0688\u06D4 {bowl} \u0646\u06D2 {out} \u06A9\u06CC \u0648\u06A9\u0679\u06CC\u06BA \u0627\u0691\u0627 \u062F\u06CC\u06BA\u06D4",caught:"\u0648\u06A9\u0679! {out} \u06A9\u06CC\u0686 \u0622\u0624\u0679\u060C \u06A9\u06CC\u0686 {field}\u060C \u0628\u0648\u0644\u0631 {bowl}\u06D4",caughtBowled:"\u0648\u06A9\u0679! {bowl} \u0646\u06D2 \u062E\u0648\u062F \u06A9\u06CC\u0686 \u067E\u06A9\u0691 \u0644\u06CC\u0627! {out} \u0622\u0624\u0679\u06D4",lbw:"\u0648\u06A9\u0679! \u0627\u06CC\u0644 \u0628\u06CC \u0688\u0628\u0644\u06CC\u0648! {bowl} \u0646\u06D2 {out} \u06A9\u0648 \u0622\u0624\u0679 \u06A9\u0631 \u062F\u06CC\u0627\u06D4",runOut:"\u0648\u06A9\u0679! \u0631\u0646 \u0622\u0624\u0679! {out} \u06A9\u0631\u06CC\u0632 \u062A\u06A9 \u0646\u06C1 \u067E\u06C1\u0646\u0686 \u0633\u06A9\u06D2\u06D4",stumped:"\u0648\u06A9\u0679! \u0627\u0633\u0679\u0645\u067E\u0688\u060C {field}\u06D4 {out} \u06A9\u0631\u06CC\u0632 \u0633\u06D2 \u0628\u0627\u06C1\u0631 \u062A\u06BE\u06D2\u06D4",hitWicket:"\u0648\u06A9\u0679! \u06C1\u0679 \u0648\u06A9\u0679\u06D4 {out} \u0622\u0624\u0679\u06D4",retiredOut:"{out} \u0631\u06CC\u0679\u0627\u0626\u0631\u0688 \u0622\u0624\u0679\u06D4",retiredHurt:"{out} \u0631\u06CC\u0679\u0627\u0626\u0631\u0688 \u06C1\u0631\u0679\u06D4",other:"\u0648\u06A9\u0679! {out} \u0622\u0624\u0679\u06D4"}};function de(e,r,n="en",i=""){let s=ue[n],u=t=>{var a,g,d;return t.replace(/\{bat\}/g,r(e.strikerId)).replace(/\{bowl\}/g,r(e.bowlerId)).replace(/\{runs\}/g,String(e.runs)).replace(/\{batting\}/g,i).replace(/\{out\}/g,r((a=e.wicket)==null?void 0:a.dismissedId)).replace(/\{field\}/g,r((g=e.wicket)==null?void 0:g.fielderId)).replace(/\{fieldBy\}/g,(d=e.wicket)!=null&&d.fielderId&&n==="en"?` (${r(e.wicket.fielderId)})`:"")},o=[];e.extra==="wide"?o.push(u(b(s.wide,e.eventId))):e.extra==="noBall"&&o.push(u(b(s.noBall,e.eventId))),e.extra==="bye"&&e.runs?o.push(u(b(s.bye,e.eventId))):e.extra==="legBye"&&e.runs?o.push(u(b(s.legBye,e.eventId))):(e.extra!=="wide"||e.runs)&&(e.boundary&&e.runs===6?o.push(u(b(s.six,e.eventId))):e.boundary&&e.runs===4?o.push(u(b(s.four,e.eventId))):e.runs===0&&!e.extra&&!e.wicket?o.push(u(b(s.dot,e.eventId))):e.runs===1?o.push(u(b(s.one,e.eventId))):e.runs===2?o.push(u(b(s.two,e.eventId))):e.runs===3?o.push(u(b(s.three,e.eventId))):e.runs>0&&o.push(u(b(s.runs,e.eventId))));let l=e.wicket;if(l){let t=l.kind in s?l.kind:"other";l.kind==="caught"&&l.fielderId&&l.fielderId===e.bowlerId&&(t="caughtBowled"),l.kind==="obstructing"&&(t="other"),o.push(u(s[t]))}return o.join(" ")}return U(ce);})();
+</script>
+<script>
+const LOGO = 'data:image/jpeg;base64,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';
+const I18N = {en: {"app.name": "CRIC ON PRO", "app.tagline": "Your Cricket. Your League. Your Stats.", "nav.home": "Home", "nav.tournaments": "Tournaments", "nav.live": "Live", "nav.rankings": "Rankings", "nav.profile": "Profile", "nav.matches": "Matches", "nav.score": "Score", "nav.history": "History", "onb.s1.title": "CRIC ON PRO", "onb.s1.body": "Your Cricket. Your League. Your Stats.", "onb.s2.title": "Live Cricket Scoring", "onb.s2.body": "Follow every ball in real time.", "onb.s3.title": "Tournaments & Teams", "onb.s3.body": "Discover fixtures, standings and teams.", "onb.s4.title": "Player Statistics", "onb.s4.body": "Track your performance across tournaments.", "onb.s5.title": "Live Broadcast", "onb.s5.body": "Bring live cricket scoring to YouTube broadcasts.", "onb.next": "Next", "onb.skip": "Skip", "onb.getStarted": "Get Started", "onb.chooseLanguage": "Choose your language", "auth.welcome": "Welcome to Cric On Pro", "auth.phoneTitle": "Enter your mobile number", "auth.phoneSubtitle": "We will send you a 6-digit code by SMS.", "auth.phoneHint": "3XX XXXXXXX", "auth.phoneInvalid": "Please enter a valid Pakistani mobile number (3XX XXXXXXX).", "auth.sendOtp": "Send Code", "auth.otpTitle": "Enter verification code", "auth.otpSent": "Code sent to {phone}", "auth.otpInvalid": "That code is not correct. Please try again.", "auth.verify": "Verify", "auth.resend": "Resend code", "auth.resendIn": "Resend code in {s}s", "auth.changeNumber": "Change number", "auth.orContinue": "or continue with", "auth.google": "Google", "auth.apple": "Apple", "auth.email": "Email", "auth.emailTitle": "Sign in with email", "auth.emailLabel": "Email address", "auth.passwordLabel": "Password", "auth.signIn": "Sign In", "auth.forgotPassword": "Forgot password?", "auth.resetSent": "Password reset link sent to your email.", "auth.demoTitle": "Demo mode", "auth.demoAs": "Continue as {role}", "auth.terms": "By continuing you agree to our Terms & Privacy Policy.", "roles.superAdmin": "Super Admin", "roles.organizer": "Organizer", "roles.teamManager": "Team Manager", "roles.player": "Player", "roles.scorer": "Scorer", "roles.spectator": "Spectator", "home.greeting": "Assalam-o-Alaikum, {name}", "home.liveNow": "Live Now", "home.upcoming": "Upcoming Matches", "home.featured": "Featured Tournaments", "home.latestResults": "Latest Results", "home.spotlight": "Player Spotlight", "home.viewScore": "View Score", "home.myAssignments": "My scoring assignments", "home.topScorer": "Top Scorer", "home.bestBowler": "Best Bowler", "home.mvp": "MVP", "home.pom": "Player of the Match", "common.live": "LIVE", "common.vs": "vs", "common.overs": "Overs", "common.ov": "ov", "common.target": "Target", "common.crr": "CRR", "common.rrr": "RRR", "common.retry": "Try again", "common.save": "Save", "common.cancel": "Cancel", "common.confirm": "Confirm", "common.done": "Done", "common.share": "Share", "common.seeAll": "See all", "common.offline": "OFFLINE MODE", "common.syncing": "SYNCING… ({n})", "common.synced": "Synced", "common.today": "Today", "common.tomorrow": "Tomorrow", "common.match": "Match {n}", "common.search": "Search players, teams, tournaments", "common.upcoming": "Upcoming", "common.completed": "Completed", "common.ongoing": "Ongoing", "common.teamsCount": "{n} teams", "common.close": "Close", "common.copy": "Copy", "common.copied": "Copied", "empty.noLive": "No Live Matches", "empty.noLiveBody": "There's no live match right now.", "empty.viewUpcoming": "View Upcoming Matches", "empty.noTournaments": "No tournaments available yet.", "empty.noPayments": "No payment transactions yet.", "empty.noMatches": "No matches scheduled yet.", "empty.noResults": "Nothing found. Try another search.", "empty.noAssignments": "You have no assigned matches.", "errors.generic": "Something went wrong. Please try again.", "errors.network": "No internet connection. Please check your network.", "errors.networkScoring": "No internet connection. Your scoring data is saved and will sync automatically.", "errors.payment": "Payment could not be completed. Please try another payment method.", "errors.notAllowed": "You don't have permission to do this.", "tournament.overview": "Overview", "tournament.matches": "Matches", "tournament.teams": "Teams", "tournament.points": "Points Table", "tournament.stats": "Stats", "tournament.organizer": "Organizer", "tournament.dates": "Dates", "tournament.venue": "Venue", "tournament.format": "Format", "tournament.sponsors": "Sponsors", "tournament.tableTopper": "Table Topper", "tournament.topRunScorers": "Top Run Scorers", "tournament.topWicketTakers": "Top Wicket Takers", "points.pos": "POS", "points.team": "TEAM", "points.p": "P", "points.w": "W", "points.l": "L", "points.t": "T", "points.nr": "NR", "points.pts": "PTS", "points.nrr": "NRR", "points.qualified": "Qualification zone", "match.scorecard": "Scorecard", "match.commentary": "Commentary", "match.info": "Info", "match.batting": "Batting", "match.bowling": "Bowling", "match.extras": "Extras", "match.total": "Total", "match.fow": "Fall of Wickets", "match.partnerships": "Partnerships", "match.result": "Result", "match.pom": "Player of the Match", "match.yetToBat": "Yet to bat", "match.notOut": "not out", "match.batter": "Batter", "match.bowler": "Bowler", "match.needRuns": "Need {runs} runs from {balls} balls", "match.wonByRuns": "{team} won by {n} runs", "match.wonByWickets": "{team} won by {n} wickets", "match.tied": "Match tied", "match.inningsBreak": "Innings break", "match.innings": "{team} innings", "match.yetToStart": "Match yet to start", "match.thisOver": "This over", "match.scheduled": "Starts {time}", "match.shareText": "Follow {a} vs {b} live on Cric On Pro: {link}", "score.title": "Scorer Console", "score.startInnings": "Start innings {n}", "score.battingTeam": "Batting team", "score.striker": "Striker", "score.nonStriker": "Non-striker", "score.bowler": "Bowler", "score.openingBowler": "Opening bowler", "score.selectBowler": "Select bowler for next over", "score.selectBatter": "Select new batter", "score.start": "Start", "score.wicket": "WICKET", "score.wide": "WIDE", "score.noBall": "NO BALL", "score.bye": "BYE", "score.legBye": "LEG BYE", "score.undo": "UNDO", "score.swap": "Swap strike", "score.endInnings": "End innings", "score.endInningsConfirm": "End this innings now?", "score.retire": "Retire batter", "score.runsOff": "Runs on this {extra}?", "score.boundaryQ": "Boundary?", "score.wicketType": "How was the batter out?", "score.dismissed": "Who is out?", "score.fielder": "Fielder", "score.replacement": "Next batter", "score.runsCompleted": "Runs completed before run out", "score.inningsComplete": "Innings complete", "score.matchComplete": "Match complete", "score.undone": "Last ball removed", "score.rejected": "Not allowed: {reason}", "score.lastBalls": "Recent", "score.needBowler": "Choose a bowler to continue", "score.needBatter": "Choose the next batter", "score.broadcast": "Broadcast overlay", "score.broadcastBody": "Add this URL as a Browser Source (1920×1080) in OBS, vMix or PRISM.", "wicket.bowled": "Bowled", "wicket.caught": "Caught", "wicket.lbw": "LBW", "wicket.runOut": "Run Out", "wicket.stumped": "Stumped", "wicket.hitWicket": "Hit Wicket", "wicket.retiredOut": "Retired", "wicket.retiredHurt": "Retired hurt", "wicket.obstructing": "Obstructing", "wicket.other": "Other", "rank.title": "Rankings", "rank.runs": "Top Run Scorers", "rank.wickets": "Top Wicket Takers", "rank.strikeRate": "Best Strike Rate", "rank.economy": "Best Economy", "rank.sixes": "Most Sixes", "rank.fours": "Most Fours", "rank.mvp": "MVP Ranking", "rank.allTournaments": "All tournaments", "rank.minBalls": "Min. {n} balls", "player.verified": "Verified Player", "player.id": "Player ID", "player.matches": "Matches", "player.innings": "Innings", "player.runs": "Runs", "player.balls": "Balls", "player.average": "Average", "player.sr": "Strike Rate", "player.hs": "Highest", "player.wickets": "Wickets", "player.overs": "Overs", "player.econ": "Economy", "player.best": "Best", "player.catches": "Catches", "player.runOuts": "Run-outs", "player.stumpings": "Stumpings", "player.mvpPoints": "MVP points", "player.batting": "Batting", "player.bowling": "Bowling", "player.fielding": "Fielding", "player.battingStyle": "Batting style", "player.bowlingStyle": "Bowling style", "player.role": "Role", "player.corporate": "Organisation", "player.role.batter": "Batter", "player.role.bowler": "Bowler", "player.role.allRounder": "All-rounder", "player.role.wicketKeeper": "Wicket-keeper", "team.captain": "Captain", "team.manager": "Manager", "team.squad": "Squad", "team.recentForm": "Recent form", "team.upcoming": "Upcoming", "profile.title": "My Profile", "profile.editProfile": "Edit Profile", "profile.language": "Language", "profile.appearance": "Appearance", "profile.notifications": "Notifications", "profile.privacy": "Privacy", "profile.security": "Security", "profile.subscription": "Subscription", "profile.paymentHistory": "Payment History", "profile.help": "Help & Support", "profile.terms": "Terms & Conditions", "profile.privacyPolicy": "Privacy Policy", "profile.about": "About Cric On Pro", "profile.logout": "Logout", "profile.deleteAccount": "Delete Account", "profile.deleteConfirm": "This permanently deletes your account and personal data. Continue?", "profile.simulateOffline": "Simulate weak network (testing)", "profile.myPlayerProfile": "My player profile", "appearance.light": "Light", "appearance.dark": "Dark", "appearance.system": "System Default", "notif.matchStart": "Match start reminders", "notif.myTeam": "My team's matches", "notif.milestones": "Milestones (50s, 100s, 5-fors)", "notif.results": "Results & qualification", "notif.billing": "Subscription & payments", "sub.title": "My Subscription", "sub.plans": "Choose a plan", "sub.current": "Current plan", "sub.status": "Status", "sub.start": "Start date", "sub.renew": "Renewal date", "sub.method": "Payment method", "sub.upgrade": "Upgrade", "sub.renewNow": "Renew", "sub.cancel": "Cancel subscription", "sub.cancelConfirm": "Your plan stays active until the renewal date. Cancel?", "sub.perMonth": "/ month", "sub.perTournament": "/ tournament", "sub.perYear": "/ year", "sub.contactUs": "Contact us", "sub.free": "Free", "sub.currentBadge": "Current", "sub.popular": "Most popular", "sub.expiresIn": "Your {plan} subscription expires in {days} days.", "sub.select": "Select", "sub.status.active": "Active", "sub.status.pending": "Pending", "sub.status.expired": "Expired", "sub.status.cancelled": "Cancelled", "sub.status.paymentFailed": "Payment Failed", "feat.liveScores": "Live scores & match centre", "feat.basicProfile": "Basic player profile", "feat.fullStats": "Full career statistics & rankings", "feat.verifiedBadge": "Verified player badge", "feat.teamManage": "Team roster & fixtures management", "feat.teamStats": "Team analytics", "feat.tournamentTools": "Create tournaments, fixtures & points tables", "feat.scorers": "Assign scorers & live scoring", "feat.broadcast": "YouTube broadcast overlay", "feat.sponsors": "Sponsor placements", "feat.multiLeague": "Multiple leagues & corporate branding", "feat.support": "Priority support", "pay.checkout": "Checkout", "pay.method": "Payment method", "pay.bank": "Bank Transfer", "pay.easypaisa": "Easypaisa", "pay.jazzcash": "JazzCash", "pay.card": "Credit / Debit Card", "pay.bankName": "Bank", "pay.accountTitle": "Account title", "pay.iban": "IBAN", "pay.accountNumber": "Account number", "pay.walletNumber": "Mobile account", "pay.reference": "Payment reference", "pay.referenceNote": "Write this reference in the transfer description.", "pay.amount": "Amount", "pay.uploadReceipt": "Upload payment receipt", "pay.receiptAttached": "Receipt attached", "pay.submit": "Submit for verification", "pay.pendingNote": "Thank you! Our team will verify your payment, usually within a few hours.", "pay.cardUnavailable": "Card payments are coming soon. Please use another payment method.", "pay.walletSteps": "Send the amount from your {wallet} app to the number below, then upload the screenshot.", "pay.secureNote": "We never store card numbers, CVV, PINs or wallet passwords.", "pay.history": "Payment History", "pay.invoice": "Invoice", "pay.download": "Download receipt", "pay.status.paid": "Paid", "pay.status.pending": "Pending", "pay.status.failed": "Failed", "pay.status.refunded": "Refunded"}, ur: {"app.name": "کرک آن پرو", "app.tagline": "آپ کی کرکٹ۔ آپ کی لیگ۔ آپ کے اعداد و شمار۔", "nav.home": "ہوم", "nav.tournaments": "ٹورنامنٹس", "nav.live": "لائیو", "nav.rankings": "رینکنگ", "nav.profile": "پروفائل", "nav.matches": "میچز", "nav.score": "اسکور", "nav.history": "ہسٹری", "onb.s1.title": "کرک آن پرو", "onb.s1.body": "آپ کی کرکٹ۔ آپ کی لیگ۔ آپ کے اعداد و شمار۔", "onb.s2.title": "لائیو کرکٹ اسکورنگ", "onb.s2.body": "ہر گیند کو براہِ راست دیکھیں۔", "onb.s3.title": "ٹورنامنٹس اور ٹیمیں", "onb.s3.body": "فکسچرز، پوائنٹس ٹیبل اور ٹیمیں دیکھیں۔", "onb.s4.title": "کھلاڑی کے اعداد و شمار", "onb.s4.body": "تمام ٹورنامنٹس میں اپنی کارکردگی دیکھیں۔", "onb.s5.title": "لائیو براڈکاسٹ", "onb.s5.body": "لائیو اسکور یوٹیوب براڈکاسٹ پر دکھائیں۔", "onb.next": "آگے", "onb.skip": "چھوڑیں", "onb.getStarted": "شروع کریں", "onb.chooseLanguage": "اپنی زبان منتخب کریں", "auth.welcome": "کرک آن پرو میں خوش آمدید", "auth.phoneTitle": "اپنا موبائل نمبر درج کریں", "auth.phoneSubtitle": "ہم آپ کو SMS کے ذریعے 6 ہندسوں کا کوڈ بھیجیں گے۔", "auth.phoneHint": "3XX XXXXXXX", "auth.phoneInvalid": "براہ کرم درست پاکستانی موبائل نمبر درج کریں (3XX XXXXXXX)۔", "auth.sendOtp": "کوڈ بھیجیں", "auth.otpTitle": "تصدیقی کوڈ درج کریں", "auth.otpSent": "کوڈ {phone} پر بھیج دیا گیا", "auth.otpInvalid": "کوڈ درست نہیں۔ دوبارہ کوشش کریں۔", "auth.verify": "تصدیق کریں", "auth.resend": "کوڈ دوبارہ بھیجیں", "auth.resendIn": "{s} سیکنڈ میں دوبارہ بھیجیں", "auth.changeNumber": "نمبر تبدیل کریں", "auth.orContinue": "یا اس کے ذریعے جاری رکھیں", "auth.google": "گوگل", "auth.apple": "ایپل", "auth.email": "ای میل", "auth.emailTitle": "ای میل سے سائن ان کریں", "auth.emailLabel": "ای میل ایڈریس", "auth.passwordLabel": "پاس ورڈ", "auth.signIn": "سائن ان", "auth.forgotPassword": "پاس ورڈ بھول گئے؟", "auth.resetSent": "پاس ورڈ ری سیٹ لنک آپ کی ای میل پر بھیج دیا گیا۔", "auth.demoTitle": "ڈیمو موڈ", "auth.demoAs": "بطور {role} جاری رکھیں", "auth.terms": "جاری رکھ کر آپ ہماری شرائط اور پرائیویسی پالیسی سے اتفاق کرتے ہیں۔", "roles.superAdmin": "سپر ایڈمن", "roles.organizer": "آرگنائزر", "roles.teamManager": "ٹیم مینیجر", "roles.player": "کھلاڑی", "roles.scorer": "اسکورر", "roles.spectator": "ناظر", "home.greeting": "السلام علیکم، {name}", "home.liveNow": "ابھی لائیو", "home.upcoming": "آنے والے میچز", "home.featured": "نمایاں ٹورنامنٹس", "home.latestResults": "تازہ ترین نتائج", "home.spotlight": "کھلاڑیوں کی جھلک", "home.viewScore": "اسکور دیکھیں", "home.myAssignments": "میرے اسکورنگ میچز", "home.topScorer": "سب سے زیادہ رنز", "home.bestBowler": "بہترین بولر", "home.mvp": "ایم وی پی", "home.pom": "مین آف دی میچ", "common.live": "لائیو", "common.vs": "بمقابلہ", "common.overs": "اوورز", "common.ov": "اوور", "common.target": "ہدف", "common.crr": "رن ریٹ", "common.rrr": "مطلوبہ رن ریٹ", "common.retry": "دوبارہ کوشش کریں", "common.save": "محفوظ کریں", "common.cancel": "منسوخ", "common.confirm": "تصدیق", "common.done": "مکمل", "common.share": "شیئر کریں", "common.seeAll": "سب دیکھیں", "common.offline": "آف لائن موڈ", "common.syncing": "سنک ہو رہا ہے… ({n})", "common.synced": "سنک مکمل", "common.today": "آج", "common.tomorrow": "کل", "common.match": "میچ {n}", "common.search": "کھلاڑی، ٹیمیں، ٹورنامنٹس تلاش کریں", "common.upcoming": "آنے والے", "common.completed": "مکمل", "common.ongoing": "جاری", "common.teamsCount": "{n} ٹیمیں", "common.close": "بند کریں", "common.copy": "کاپی", "common.copied": "کاپی ہو گیا", "empty.noLive": "کوئی لائیو میچ نہیں", "empty.noLiveBody": "اس وقت کوئی میچ لائیو نہیں ہے۔", "empty.viewUpcoming": "آنے والے میچز دیکھیں", "empty.noTournaments": "ابھی کوئی ٹورنامنٹ دستیاب نہیں۔", "empty.noPayments": "ابھی تک کوئی ادائیگی نہیں ہوئی۔", "empty.noMatches": "ابھی کوئی میچ شیڈول نہیں۔", "empty.noResults": "کچھ نہیں ملا۔ کچھ اور تلاش کریں۔", "empty.noAssignments": "آپ کو کوئی میچ تفویض نہیں کیا گیا۔", "errors.generic": "کچھ غلط ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔", "errors.network": "انٹرنیٹ کنکشن نہیں ہے۔ اپنا نیٹ ورک چیک کریں۔", "errors.networkScoring": "انٹرنیٹ کنکشن نہیں ہے۔ آپ کا اسکور محفوظ ہے اور خود بخود سنک ہو جائے گا۔", "errors.payment": "ادائیگی مکمل نہیں ہو سکی۔ براہ کرم کوئی اور طریقہ آزمائیں۔", "errors.notAllowed": "آپ کو اس کی اجازت نہیں ہے۔", "tournament.overview": "جائزہ", "tournament.matches": "میچز", "tournament.teams": "ٹیمیں", "tournament.points": "پوائنٹس ٹیبل", "tournament.stats": "اعداد و شمار", "tournament.organizer": "آرگنائزر", "tournament.dates": "تاریخیں", "tournament.venue": "مقام", "tournament.format": "فارمیٹ", "tournament.sponsors": "اسپانسرز", "tournament.tableTopper": "ٹیبل ٹاپر", "tournament.topRunScorers": "سب سے زیادہ رنز", "tournament.topWicketTakers": "سب سے زیادہ وکٹیں", "points.pos": "نمبر", "points.team": "ٹیم", "points.p": "میچ", "points.w": "جیت", "points.l": "ہار", "points.t": "ٹائی", "points.nr": "بے نتیجہ", "points.pts": "پوائنٹس", "points.nrr": "نیٹ رن ریٹ", "points.qualified": "کوالیفکیشن زون", "match.scorecard": "اسکور کارڈ", "match.commentary": "کمنٹری", "match.info": "معلومات", "match.batting": "بیٹنگ", "match.bowling": "بولنگ", "match.extras": "ایکسٹرا", "match.total": "کل", "match.fow": "وکٹیں گرنے کی ترتیب", "match.partnerships": "شراکتیں", "match.result": "نتیجہ", "match.pom": "مین آف دی میچ", "match.yetToBat": "ابھی بیٹنگ باقی", "match.notOut": "ناٹ آؤٹ", "match.batter": "بیٹر", "match.bowler": "بولر", "match.needRuns": "{balls} گیندوں پر {runs} رنز درکار", "match.wonByRuns": "{team} نے {n} رنز سے جیت لیا", "match.wonByWickets": "{team} نے {n} وکٹوں سے جیت لیا", "match.tied": "میچ ٹائی ہو گیا", "match.inningsBreak": "اننگز بریک", "match.innings": "{team} کی اننگز", "match.yetToStart": "میچ ابھی شروع نہیں ہوا", "match.thisOver": "یہ اوور", "match.scheduled": "آغاز {time}", "match.shareText": "{a} بمقابلہ {b} لائیو دیکھیں، کرک آن پرو پر: {link}", "score.title": "اسکورر کنسول", "score.startInnings": "اننگز {n} شروع کریں", "score.battingTeam": "بیٹنگ ٹیم", "score.striker": "اسٹرائیکر", "score.nonStriker": "نان اسٹرائیکر", "score.bowler": "بولر", "score.openingBowler": "پہلا بولر", "score.selectBowler": "اگلے اوور کے لیے بولر منتخب کریں", "score.selectBatter": "نیا بیٹر منتخب کریں", "score.start": "شروع کریں", "score.wicket": "وکٹ", "score.wide": "وائیڈ", "score.noBall": "نو بال", "score.bye": "بائی", "score.legBye": "لیگ بائی", "score.undo": "واپس", "score.swap": "اسٹرائیک تبدیل کریں", "score.endInnings": "اننگز ختم کریں", "score.endInningsConfirm": "کیا یہ اننگز ابھی ختم کرنی ہے؟", "score.retire": "بیٹر ریٹائر کریں", "score.runsOff": "اس {extra} پر کتنے رنز؟", "score.boundaryQ": "باؤنڈری؟", "score.wicketType": "بیٹر کیسے آؤٹ ہوا؟", "score.dismissed": "کون آؤٹ ہوا؟", "score.fielder": "فیلڈر", "score.replacement": "اگلا بیٹر", "score.runsCompleted": "رن آؤٹ سے پہلے مکمل رنز", "score.inningsComplete": "اننگز مکمل", "score.matchComplete": "میچ مکمل", "score.undone": "آخری گیند ہٹا دی گئی", "score.rejected": "اجازت نہیں: {reason}", "score.lastBalls": "حالیہ", "score.needBowler": "جاری رکھنے کے لیے بولر منتخب کریں", "score.needBatter": "اگلا بیٹر منتخب کریں", "score.broadcast": "براڈکاسٹ اوورلے", "score.broadcastBody": "یہ URL او بی ایس، وی مکس یا پرزم میں براؤزر سورس (1920×1080) کے طور پر شامل کریں۔", "wicket.bowled": "بولڈ", "wicket.caught": "کیچ", "wicket.lbw": "ایل بی ڈبلیو", "wicket.runOut": "رن آؤٹ", "wicket.stumped": "اسٹمپڈ", "wicket.hitWicket": "ہٹ وکٹ", "wicket.retiredOut": "ریٹائرڈ", "wicket.retiredHurt": "ریٹائرڈ ہرٹ", "wicket.obstructing": "رکاوٹ", "wicket.other": "دیگر", "rank.title": "رینکنگ", "rank.runs": "سب سے زیادہ رنز", "rank.wickets": "سب سے زیادہ وکٹیں", "rank.strikeRate": "بہترین اسٹرائیک ریٹ", "rank.economy": "بہترین اکانومی", "rank.sixes": "سب سے زیادہ چھکے", "rank.fours": "سب سے زیادہ چوکے", "rank.mvp": "ایم وی پی رینکنگ", "rank.allTournaments": "تمام ٹورنامنٹس", "rank.minBalls": "کم از کم {n} گیندیں", "player.verified": "تصدیق شدہ کھلاڑی", "player.id": "کھلاڑی آئی ڈی", "player.matches": "میچز", "player.innings": "اننگز", "player.runs": "رنز", "player.balls": "گیندیں", "player.average": "اوسط", "player.sr": "اسٹرائیک ریٹ", "player.hs": "بہترین اسکور", "player.wickets": "وکٹیں", "player.overs": "اوورز", "player.econ": "اکانومی", "player.best": "بہترین بولنگ", "player.catches": "کیچز", "player.runOuts": "رن آؤٹس", "player.stumpings": "اسٹمپنگز", "player.mvpPoints": "ایم وی پی پوائنٹس", "player.batting": "بیٹنگ", "player.bowling": "بولنگ", "player.fielding": "فیلڈنگ", "player.battingStyle": "بیٹنگ انداز", "player.bowlingStyle": "بولنگ انداز", "player.role": "کردار", "player.corporate": "ادارہ", "player.role.batter": "بیٹر", "player.role.bowler": "بولر", "player.role.allRounder": "آل راؤنڈر", "player.role.wicketKeeper": "وکٹ کیپر", "team.captain": "کپتان", "team.manager": "مینیجر", "team.squad": "اسکواڈ", "team.recentForm": "حالیہ کارکردگی", "team.upcoming": "آنے والے", "profile.title": "میری پروفائل", "profile.editProfile": "پروفائل میں ترمیم", "profile.language": "زبان", "profile.appearance": "ظاہری شکل", "profile.notifications": "اطلاعات", "profile.privacy": "پرائیویسی", "profile.security": "سیکیورٹی", "profile.subscription": "سبسکرپشن", "profile.paymentHistory": "ادائیگیوں کی تاریخ", "profile.help": "مدد اور سپورٹ", "profile.terms": "شرائط و ضوابط", "profile.privacyPolicy": "پرائیویسی پالیسی", "profile.about": "کرک آن پرو کے بارے میں", "profile.logout": "لاگ آؤٹ", "profile.deleteAccount": "اکاؤنٹ ڈیلیٹ کریں", "profile.deleteConfirm": "اس سے آپ کا اکاؤنٹ اور ذاتی ڈیٹا مستقل طور پر ڈیلیٹ ہو جائے گا۔ جاری رکھیں؟", "profile.simulateOffline": "کمزور نیٹ ورک کی نقل (ٹیسٹنگ)", "profile.myPlayerProfile": "میری کھلاڑی پروفائل", "appearance.light": "لائٹ", "appearance.dark": "ڈارک", "appearance.system": "سسٹم کے مطابق", "notif.matchStart": "میچ شروع ہونے کی یاد دہانی", "notif.myTeam": "میری ٹیم کے میچز", "notif.milestones": "سنگ میل (50، 100، 5 وکٹیں)", "notif.results": "نتائج اور کوالیفکیشن", "notif.billing": "سبسکرپشن اور ادائیگیاں", "sub.title": "میری سبسکرپشن", "sub.plans": "پلان منتخب کریں", "sub.current": "موجودہ پلان", "sub.status": "حیثیت", "sub.start": "آغاز کی تاریخ", "sub.renew": "تجدید کی تاریخ", "sub.method": "ادائیگی کا طریقہ", "sub.upgrade": "اپ گریڈ کریں", "sub.renewNow": "تجدید کریں", "sub.cancel": "سبسکرپشن منسوخ کریں", "sub.cancelConfirm": "آپ کا پلان تجدید کی تاریخ تک فعال رہے گا۔ منسوخ کریں؟", "sub.perMonth": "/ ماہانہ", "sub.perTournament": "/ فی ٹورنامنٹ", "sub.perYear": "/ سالانہ", "sub.contactUs": "ہم سے رابطہ کریں", "sub.free": "مفت", "sub.currentBadge": "موجودہ", "sub.popular": "سب سے مقبول", "sub.expiresIn": "آپ کی {plan} سبسکرپشن {days} دن میں ختم ہو جائے گی۔", "sub.select": "منتخب کریں", "sub.status.active": "فعال", "sub.status.pending": "زیر التواء", "sub.status.expired": "ختم شدہ", "sub.status.cancelled": "منسوخ", "sub.status.paymentFailed": "ادائیگی ناکام", "feat.liveScores": "لائیو اسکور اور میچ سینٹر", "feat.basicProfile": "بنیادی کھلاڑی پروفائل", "feat.fullStats": "مکمل کیریئر اعداد و شمار اور رینکنگ", "feat.verifiedBadge": "تصدیق شدہ کھلاڑی بیج", "feat.teamManage": "ٹیم اسکواڈ اور فکسچرز کا انتظام", "feat.teamStats": "ٹیم تجزیات", "feat.tournamentTools": "ٹورنامنٹ، فکسچرز اور پوائنٹس ٹیبل بنائیں", "feat.scorers": "اسکوررز مقرر کریں اور لائیو اسکورنگ", "feat.broadcast": "یوٹیوب براڈکاسٹ اوورلے", "feat.sponsors": "اسپانسر کی تشہیر", "feat.multiLeague": "متعدد لیگز اور کارپوریٹ برانڈنگ", "feat.support": "ترجیحی سپورٹ", "pay.checkout": "ادائیگی", "pay.method": "ادائیگی کا طریقہ", "pay.bank": "بینک ٹرانسفر", "pay.easypaisa": "ایزی پیسہ", "pay.jazzcash": "جاز کیش", "pay.card": "کریڈٹ / ڈیبٹ کارڈ", "pay.bankName": "بینک", "pay.accountTitle": "اکاؤنٹ ٹائٹل", "pay.iban": "آئی بی اے این", "pay.accountNumber": "اکاؤنٹ نمبر", "pay.walletNumber": "موبائل اکاؤنٹ", "pay.reference": "ادائیگی ریفرنس", "pay.referenceNote": "یہ ریفرنس ٹرانسفر کی تفصیل میں لکھیں۔", "pay.amount": "رقم", "pay.uploadReceipt": "ادائیگی کی رسید اپ لوڈ کریں", "pay.receiptAttached": "رسید منسلک ہو گئی", "pay.submit": "تصدیق کے لیے جمع کرائیں", "pay.pendingNote": "شکریہ! ہماری ٹیم عموماً چند گھنٹوں میں آپ کی ادائیگی کی تصدیق کر دے گی۔", "pay.cardUnavailable": "کارڈ ادائیگی جلد دستیاب ہوگی۔ براہ کرم کوئی اور طریقہ استعمال کریں۔", "pay.walletSteps": "اپنی {wallet} ایپ سے رقم نیچے دیے گئے نمبر پر بھیجیں، پھر اسکرین شاٹ اپ لوڈ کریں۔", "pay.secureNote": "ہم کارڈ نمبر، CVV، PIN یا والٹ پاس ورڈ کبھی محفوظ نہیں کرتے۔", "pay.history": "ادائیگیوں کی تاریخ", "pay.invoice": "انوائس", "pay.download": "رسید ڈاؤن لوڈ کریں", "pay.status.paid": "ادا شدہ", "pay.status.pending": "زیر التواء", "pay.status.failed": "ناکام", "pay.status.refunded": "واپس شدہ"}};
+// ============ Cric On Pro — interactive demo (uses the real scoring engine: window.COP) ============
+const $app = document.getElementById('app');
+const S = {
+  lang: 'en', dark: false, onb: 0, onbDone: false, user: null, phone: '',
+  tab: 'home', stack: [], sheet: null, toast: null, flash: null,
+  outbox: [], online: true, syncing: false, setup: {}, subTab: {}, rankCat: 0, rankTour: '',
+  checkout: null, otp: '',
+};
+
+// ---------------- i18n ----------------
+function t(k, p) { let s = (I18N[S.lang] && I18N[S.lang][k]) || I18N.en[k] || k; if (p) for (const x in p) s = s.split('{' + x + '}').join(p[x]); return s; }
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const ic = (n, cls = '') => `<span class="ms ${cls}">${n}</span>`;
+const fmtDate = (d, opts) => new Intl.DateTimeFormat(S.lang === 'ur' ? 'ur-PK' : 'en-GB', { timeZone: 'Asia/Karachi', ...opts }).format(d);
+const matchTime = (d) => fmtDate(d, { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + fmtDate(d, { hour: 'numeric', minute: '2-digit' });
+const pkr = (n) => 'PKR ' + n.toLocaleString('en-US');
+const nrr = (v) => (v > 0 ? '+' : '') + v.toFixed(3);
+const uuid = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
+
+// ---------------- demo world (fictional names) ----------------
+const FIRST = ['Ahmed','Usman','Bilal','Hamza','Hassan','Ali','Fahad','Saad','Zain','Umar','Talha','Hamid','Shahzaib','Waqas','Danish','Asad','Junaid','Haris','Imran','Kashif','Rizwan','Faisal','Adeel','Nouman','Sohail','Yasir','Moiz','Arslan','Taimoor','Shoaib','Raheel','Kamran','Obaid','Wajid'];
+const FIRST_UR = {Ahmed:'احمد',Usman:'عثمان',Bilal:'بلال',Hamza:'حمزہ',Hassan:'حسن',Ali:'علی',Fahad:'فہد',Saad:'سعد',Zain:'زین',Umar:'عمر',Talha:'طلحہ',Hamid:'حامد',Shahzaib:'شاہزیب',Waqas:'وقاص',Danish:'دانش',Asad:'اسد',Junaid:'جنید',Haris:'حارث',Imran:'عمران',Kashif:'کاشف',Rizwan:'رضوان',Faisal:'فیصل',Adeel:'عدیل',Nouman:'نعمان',Sohail:'سہیل',Yasir:'یاسر',Moiz:'معز',Arslan:'ارسلان',Taimoor:'تیمور',Shoaib:'شعیب',Raheel:'راحیل',Kamran:'کامران',Obaid:'عبید',Wajid:'واجد'};
+const LAST = ['Raza','Tariq','Khan','Ali','Iqbal','Butt','Malik','Sheikh','Qureshi','Javed','Mirza','Chaudhry','Aslam','Anwar','Saleem'];
+const LAST_UR = {Raza:'رضا',Tariq:'طارق',Khan:'خان',Ali:'علی',Iqbal:'اقبال',Butt:'بٹ',Malik:'ملک',Sheikh:'شیخ',Qureshi:'قریشی',Javed:'جاوید',Mirza:'مرزا',Chaudhry:'چوہدری',Aslam:'اسلم',Anwar:'انور',Saleem:'سلیم'};
+
+const TEAMS = {};
+[['t-lcxi','Lahore Corporate XI','لاہور کارپوریٹ الیون','LCX','Ravi Textiles','#0F7A3A'],['t-dha','DHA Strikers','ڈی ایچ اے اسٹرائیکرز','DHA','Lahore Steel Co.','#1E6FD9'],
+ ['t-gul','Gulberg Warriors','گلبرگ واریئرز','GUL','Shalimar Foods','#D62828'],['t-jtk','Johar Town Kings','جوہر ٹاؤن کنگز','JTK','Canal Tech','#7B3FE4'],
+ ['t-mtm','Model Town Mavericks','ماڈل ٹاؤن ماورکس','MTM','Mall Road Pharma','#B7791F'],['t-bbl','Bahria Blasters','بحریہ بلاسٹرز','BBL','Gulshan Builders','#0E7490'],
+ ['t-cnt','Cantt Chargers','کینٹ چارجرز','CNT','Fortress Logistics','#4B5563'],['t-val','Valencia Vipers','ویلنشیا وائپرز','VAL','Wapda Town Motors','#15803D']]
+  .forEach(([id, en, ur, short, corp, color]) => (TEAMS[id] = { id, en, ur, short, corp, color, squad: [] }));
+const PLAYERS = {};
+let pc = 0;
+Object.values(TEAMS).forEach((tm, ti) => {
+  const size = ti < 4 ? 11 : 6;
+  for (let i = 0; i < size; i++) {
+    pc++;
+    const f = FIRST[(pc * 7) % FIRST.length], l = LAST[(pc * 5 + i) % LAST.length];
+    const role = i === 1 ? 'wicketKeeper' : i < size - 5 ? 'batter' : i < size - 3 ? 'allRounder' : 'bowler';
+    const id = 'p' + String(pc).padStart(3, '0');
+    PLAYERS[id] = { id, cop: 'COP-' + String(1000 + pc).padStart(6, '0'), en: f + ' ' + l, ur: FIRST_UR[f] + ' ' + LAST_UR[l], short: f[0] + '. ' + l, team: tm.id, role, verified: pc % 3 !== 0,
+      bat: pc % 4 === 0 ? 'Left-hand bat' : 'Right-hand bat', bowl: role === 'bowler' || role === 'allRounder' ? ['Right-arm fast','Right-arm off-break','Left-arm orthodox','Right-arm medium','Leg-break'][pc % 5] : '—' };
+    tm.squad.push(id);
+  }
+  tm.captain = tm.squad[0];
+});
+const VENUES = { 'v-lccg': 'LCCA Ground, Gulberg', 'v-mtg': 'Model Town Greens', 'v-dha': 'DHA Phase 6 Ground' };
+const day0 = new Date(); day0.setHours(0, 0, 0, 0);
+const at = (d, h, m = 0) => new Date(day0.getTime() + d * 864e5 + h * 36e5 + m * 6e4);
+const TOURS = {
+  'tr-esc26': { id: 'tr-esc26', en: 'Elite Super Cup 2026', ur: 'ایلیٹ سپر کپ 2026', format: 'T20', teams: ['t-lcxi','t-dha','t-gul','t-jtk'], start: at(-9, 0), end: at(12, 0), status: 'ongoing', color: '#0F7A3A', qualify: 2,
+    desc: "Lahore's premier corporate T20 championship, played under lights.", venues: ['v-lccg','v-dha'], sponsors: ['Lahore Steel Co. · Title', 'Ravi Textiles · Gold', 'Canal Tech · Silver'] },
+  'tr-ess26': { id: 'tr-ess26', en: 'Elite Super Sixes Championship', ur: 'ایلیٹ سپر سکسز چیمپئن شپ', format: 'Sixes · 6 overs', teams: ['t-mtm','t-bbl','t-cnt','t-val'], start: at(-2, 0), end: at(3, 0), status: 'ongoing', color: '#1E6FD9', qualify: 2,
+    desc: 'Fast, six-a-side, six-over cricket. Every ball matters.', venues: ['v-mtg'], sponsors: ['Canal Tech · Silver'] },
+  'tr-corp27': { id: 'tr-corp27', en: 'Corporate League 2027', ur: 'کارپوریٹ لیگ 2027', format: 'T20', teams: [], start: at(40, 0), end: at(75, 0), status: 'upcoming', color: '#7B3FE4', qualify: 4,
+    desc: "Inter-company league for Lahore's corporate sector. Registrations open.", venues: ['v-dha'], sponsors: [] },
+};
+const MATCHES = {};
+const EV = {}; // server-confirmed events per match
+function fixture(id, tid, no, a, b, venue, when, o = {}) {
+  MATCHES[id] = { id, tid, no, a, b, venue, at: when, overs: o.overs || 20, pps: o.pps || 11, status: 'scheduled', stage: o.stage || null, scorers: o.scorers || [] };
+  EV[id] = [];
+  return MATCHES[id];
+}
+const cfgOf = (m) => ({ matchId: m.id, oversPerInnings: m.overs, playersPerSide: m.pps });
+
+// Deterministic RNG
+function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+
+/** Drives the real engine to produce valid demo events (stats are therefore derived, never typed). */
+function Sim(m, seed) {
+  const r = rng(seed), st = COP.newMatchState(cfgOf(m)), events = [];
+  let seq = 0, clock = m.at.getTime();
+  const first = m.no % 2 ? m.a : m.b, second = first === m.a ? m.b : m.a;
+  const bowlers = (tid) => { const sq = TEAMS[tid].squad; return sq.slice(sq.length - (m.pps <= 6 ? 4 : 5)); };
+  function add(type, payload) {
+    seq++; clock += 25000 + Math.floor(r() * 20000);
+    const cur = st.innings[st.innings.length - 1];
+    const e = { id: m.id + '-e' + seq, matchId: m.id, inningsNo: payload.inningsNo || (cur ? cur.inningsNo : 1), seq, type, timestamp: clock, deviceId: 'demo', scorerUid: 'demo-scorer', ...payload.body };
+    try { COP.applyEvent(st, e); events.push(e); } catch (err) { /* skip */ }
+  }
+  function step() {
+    if (st.result.type !== 'inProgress') return false;
+    const inn = st.innings[st.innings.length - 1];
+    if (!inn || (inn.complete && st.innings.length === 1)) {
+      const no = inn ? 2 : 1, bat = no === 1 ? first : second, bowl = no === 1 ? second : first;
+      add('inningsStart', { inningsNo: no, body: { inningsStart: { battingTeamId: bat, bowlingTeamId: bowl, strikerId: TEAMS[bat].squad[0], nonStrikerId: TEAMS[bat].squad[1], bowlerId: bowlers(bowl)[0] } } });
+      return true;
+    }
+    const batSq = TEAMS[inn.battingTeamId].squad, bowlSq = TEAMS[inn.bowlingTeamId].squad;
+    if (!inn.bowlerId) {
+      const opts = bowlers(inn.bowlingTeamId), ov = Math.floor(inn.legalBalls / 6);
+      let pick = opts[ov % opts.length]; if (pick === inn.lastOverBowlerId) pick = opts[(ov + 1) % opts.length];
+      add('bowlerChange', { body: { bowlerChange: { bowlerId: pick } } });
+      return true;
+    }
+    const next = batSq.find((id) => !inn.batters[id]) || null;
+    const x = r(); let d;
+    if (x < 0.045) {
+      const k = r(); const kind = k < .45 ? 'caught' : k < .7 ? 'bowled' : k < .82 ? 'lbw' : k < .92 ? 'runOut' : 'stumped';
+      const fielder = kind === 'stumped' ? bowlSq[1] : (kind === 'caught' || kind === 'runOut') ? bowlSq[Math.floor(r() * bowlSq.length)] : null;
+      d = { runs: 0, extra: null, boundary: false, wicket: { kind, dismissedId: inn.strikerId, fielderId: fielder, newBatterId: next } };
+    } else if (x < 0.075) d = { runs: 0, extra: 'wide' };
+    else if (x < 0.085) d = { runs: r() < .7 ? 0 : 1, extra: 'noBall' };
+    else if (x < 0.10) d = { runs: 1, extra: 'legBye' };
+    else {
+      const y = r(), ag = m.overs <= 10 ? .06 : 0;
+      d = y < .33 - ag ? { runs: 0 } : y < .65 - ag ? { runs: 1 } : y < .76 - ag ? { runs: 2 } : y < .78 - ag ? { runs: 3 } : y < .92 - ag / 2 ? { runs: 4, boundary: true } : { runs: 6, boundary: true };
+    }
+    add('delivery', { body: { delivery: { extra: null, boundary: false, ...d } } });
+    return true;
+  }
+  return { st, events, step, legal: () => st.innings.reduce((s, i) => s + i.legalBalls, 0) };
+}
+function simulate(m, seed, stopAfter) {
+  const sim = Sim(m, seed);
+  while (sim.st.result.type === 'inProgress' && !(stopAfter && sim.legal() >= stopAfter)) if (!sim.step()) break;
+  EV[m.id] = sim.events.slice();
+  m.status = sim.st.result.type === 'inProgress' ? 'live' : 'completed';
+  return sim;
+}
+simulate(fixture('m-esc-1', 'tr-esc26', 1, 't-lcxi', 't-dha', 'v-lccg', at(-9, 19, 30)), 11);
+simulate(fixture('m-esc-2', 'tr-esc26', 2, 't-gul', 't-jtk', 'v-dha', at(-8, 19, 30)), 22);
+simulate(fixture('m-esc-3', 'tr-esc26', 3, 't-lcxi', 't-gul', 'v-lccg', at(-6, 19, 30)), 33);
+simulate(fixture('m-esc-4', 'tr-esc26', 4, 't-dha', 't-jtk', 'v-dha', at(-4, 19, 30)), 44);
+simulate(fixture('m-esc-5', 'tr-esc26', 5, 't-lcxi', 't-jtk', 'v-lccg', at(-2, 19, 30)), 55);
+simulate(fixture('m-esc-6', 'tr-esc26', 6, 't-dha', 't-gul', 'v-dha', new Date(Date.now() - 2 * 36e5), { scorers: ['demo-scorer'] }), 66, 93);
+fixture('m-esc-7', 'tr-esc26', 7, 't-lcxi', 't-gul', 'v-lccg', at(1, 19, 30), { stage: 'Qualifier', scorers: ['demo-scorer'] });
+fixture('m-esc-8', 'tr-esc26', 8, 't-dha', 't-jtk', 'v-dha', at(3, 19, 30), { stage: 'Eliminator' });
+fixture('m-esc-9', 'tr-esc26', 9, 't-lcxi', 't-dha', 'v-lccg', at(12, 19, 30), { stage: 'Final' });
+const SX = { overs: 6, pps: 6 };
+simulate(fixture('m-ess-1', 'tr-ess26', 1, 't-mtm', 't-bbl', 'v-mtg', at(-2, 16), SX), 101);
+simulate(fixture('m-ess-2', 'tr-ess26', 2, 't-cnt', 't-val', 'v-mtg', at(-2, 17), SX), 202);
+simulate(fixture('m-ess-3', 'tr-ess26', 3, 't-mtm', 't-cnt', 'v-mtg', at(-1, 16), SX), 303);
+const liveSim = simulate(fixture('m-ess-4', 'tr-ess26', 4, 't-bbl', 't-val', 'v-mtg', new Date(Date.now() - 40 * 6e4), SX), 404, 40);
+fixture('m-ess-5', 'tr-ess26', 5, 't-mtm', 't-val', 'v-mtg', at(0, 21), SX);
+fixture('m-ess-6', 'tr-ess26', 6, 't-bbl', 't-cnt', 'v-mtg', at(1, 16), SX);
+
+const PLANS = [
+  { id: 'free', en: 'Free', ur: 'مفت', price: 0, period: 'month', feats: ['feat.liveScores', 'feat.basicProfile'] },
+  { id: 'player', en: 'Player Pro', ur: 'پلیئر پرو', price: 499, period: 'month', feats: ['feat.liveScores', 'feat.fullStats', 'feat.verifiedBadge'] },
+  { id: 'team', en: 'Team', ur: 'ٹیم', price: 2499, period: 'month', feats: ['feat.teamManage', 'feat.teamStats', 'feat.fullStats'], hot: true },
+  { id: 'tpro', en: 'Tournament Pro', ur: 'ٹورنامنٹ پرو', price: 14999, period: 'tournament', feats: ['feat.tournamentTools', 'feat.scorers', 'feat.broadcast', 'feat.sponsors'] },
+  { id: 'ent', en: 'Corporate / Enterprise', ur: 'کارپوریٹ / انٹرپرائز', price: null, period: 'year', feats: ['feat.multiLeague', 'feat.broadcast', 'feat.support'] },
+];
+const SUB = { plan: 'team', status: 'active', start: at(-25, 0), renew: at(5, 0), method: 'pay.easypaisa' };
+const PAYMENTS = [{ inv: 'INV-COP-7F3K2Q', plan: 'Team', amt: 2499, method: 'pay.easypaisa', status: 'paid', date: at(-25, 0) }];
+
+// ---------------- engine helpers ----------------
+const cache = {};
+function build(m, events) {
+  const st = COP.newMatchState(cfgOf(m));
+  for (const e of COP.effectiveEvents(events)) { try { COP.applyEvent(st, e); } catch (err) { st.rejected.push({ eventId: e.id, reason: err.message }); } }
+  return st;
+}
+function stateOf(id) {
+  const m = MATCHES[id], ev = EV[id];
+  const c = cache[id];
+  if (c && c.n === ev.length) return c.st;
+  const st = build(m, ev); cache[id] = { n: ev.length, st }; return st;
+}
+const cur = (st) => st.innings[st.innings.length - 1];
+const pn = (id) => { const p = PLAYERS[id]; return !p ? '—' : S.lang === 'ur' ? p.ur : p.en; };
+const ps = (id) => { const p = PLAYERS[id]; return !p ? '—' : S.lang === 'ur' ? p.ur : p.short; };
+const tn = (id) => { const x = TEAMS[id]; return !x ? '—' : S.lang === 'ur' ? x.ur : x.en; };
+const tsn = (id) => (TEAMS[id] ? TEAMS[id].short : '—');
+const ton = (tr) => (S.lang === 'ur' ? tr.ur : tr.en);
+const initials = (id) => (PLAYERS[id] ? PLAYERS[id].en.split(' ').map((x) => x[0]).join('') : '?');
+
+function resultText(st) {
+  const r = st.result;
+  if (r.type === 'win') return r.marginRuns != null ? t('match.wonByRuns', { team: tn(r.winnerTeamId), n: r.marginRuns }) : t('match.wonByWickets', { team: tn(r.winnerTeamId), n: r.marginWickets });
+  if (r.type === 'tie') return t('match.tied');
+  return '';
+}
+function situation(st) {
+  if (st.result.type !== 'inProgress') return resultText(st);
+  const inn = cur(st);
+  if (!inn) return t('match.yetToStart');
+  if (inn.complete) return t('match.inningsBreak');
+  if (inn.target != null) return t('match.needRuns', { runs: inn.target - inn.total, balls: st.config.oversPerInnings * 6 - inn.legalBalls });
+  return '';
+}
+function standings(tid) {
+  const tr = TOURS[tid], done = [];
+  Object.values(MATCHES).filter((m) => m.tid === tid && m.status === 'completed').forEach((m) => {
+    const st = stateOf(m.id); if (st.result.type === 'inProgress') return;
+    done.push({ matchId: m.id, teamA: m.a, teamB: m.b, oversPerInnings: m.overs, result: st.result.type === 'tie' ? 'tie' : 'win', winnerTeamId: st.result.winnerTeamId,
+      innings: st.innings.map((i) => ({ teamId: i.battingTeamId, runs: i.total, legalBalls: i.legalBalls, allOut: i.endReason === 'allOut' })) });
+  });
+  return COP.computeStandings(tr.teams, done, { win: 2, tie: 1, noResult: 1, loss: 0, qualifyTop: tr.qualify });
+}
+function stats(tid) {
+  const sts = Object.values(MATCHES).filter((m) => (!tid || m.tid === tid) && m.status !== 'scheduled').map((m) => stateOf(m.id));
+  return Object.fromEntries(COP.aggregateCareer(sts)); // Map → plain object
+}
+
+// ---------------- generic UI pieces ----------------
+const teamBadge = (id, size = 34) => { const x = TEAMS[id] || { short: '?', color: '#0F7A3A' }; return `<div class="tb" style="width:${size}px;height:${size}px;color:${x.color};border-color:${x.color}80;background:${x.color}22;font-size:${size * .28}px">${x.short}</div>`; };
+const avatar = (id, size = 44, extra = '') => `<div class="avatar" style="width:${size}px;height:${size}px;font-size:${size * .34}px;${extra}">${initials(id)}${PLAYERS[id] && PLAYERS[id].verified ? `<span class="vf">${ic('verified', 'f')}</span>` : ''}</div>`;
+const live = () => `<span class="live"><i></i>${t('common.live')}</span>`;
+const badge = (txt, tone) => `<span class="badge b-${tone}">${esc(txt)}</span>`;
+const ballCls = (b) => (b.wicket && b.wicket.kind !== 'retiredHurt' ? 'bw' : b.boundary && b.runs === 6 ? 'b6' : b.boundary && b.runs === 4 ? 'b4' : '');
+const ballsRow = (inn) => `<div class="balls">${COP.thisOver(inn).map((b) => `<span class="bl ${ballCls(b)}">${esc(b.label)}</span>`).join('')}</div>`;
+const sec = (title, action, act) => `<div class="sec"><h3>${title}</h3>${action ? `<button class="link" data-a="${act}">${action}</button>` : ''}</div>`;
+const empty = (icon, title, body, action, act) => `<div style="text-align:center;padding:30px 24px"><div style="width:68px;height:68px;border-radius:50%;background:var(--chip);display:grid;place-items:center;margin:0 auto 14px;color:var(--muted)">${ic(icon)}</div><div style="font-weight:700">${title}</div>${body ? `<div class="muted small" style="margin-top:4px">${body}</div>` : ''}${action ? `<button class="btn sec2" style="margin-top:16px;width:auto;padding:0 20px;display:inline-flex" data-a="${act}">${action}</button>` : ''}</div>`;
+const appbar = (title, back = true, actions = '') => `<div class="appbar">${back ? `<button class="iconbtn" data-a="back">${ic('arrow_back', 'flip')}</button>` : ''}<h2>${title}</h2>${actions}</div>`;
+
+function matchCard(m, showTour = true) {
+  const st = m.status === 'scheduled' ? null : stateOf(m.id);
+  const tr = TOURS[m.tid];
+  const line = (tid) => {
+    const inn = st && st.innings.find((i) => i.battingTeamId === tid);
+    const bold = st && (st.result.winnerTeamId === tid || (m.status === 'live' && cur(st) && cur(st).battingTeamId === tid));
+    return `<div class="teamline">${teamBadge(tid)}<div class="nm" style="${bold ? 'font-weight:800' : ''}">${esc(tn(tid))}</div>${inn ? `<div class="num"><span class="sc">${inn.total}/${inn.wickets}</span> <span class="muted small">(${COP.oversText(inn.legalBalls)})</span></div>` : ''}</div>`;
+  };
+  const foot = m.status === 'scheduled' ? `${matchTime(m.at)} · ${VENUES[m.venue]}` : situation(st);
+  return `<div class="card" data-a="open-match:${m.id}">
+    <div class="row"><div class="lbl grow">${showTour ? esc(ton(tr)) + ' · ' : ''}${esc(m.stage || t('common.match', { n: m.no }))}</div>${m.status === 'live' ? live() : m.status === 'completed' ? badge(t('common.completed'), 'neutral') : ''}</div>
+    <div style="margin-top:6px">${line(m.a)}${line(m.b)}</div>
+    ${foot ? `<div class="small" style="margin-top:6px;${m.status === 'live' ? 'color:var(--primary);font-weight:700' : 'color:var(--muted)'}">${esc(foot)}</div>` : ''}
+  </div>`;
+}
+function heroCard(m) {
+  const st = stateOf(m.id), inn = cur(st), tr = TOURS[m.tid];
+  const bat = (id) => { if (!id) return '—'; const b = inn.batters[id]; return `${esc(ps(id))}${id === inn.strikerId ? '*' : ''} <b class="num">${b.runs}</b> <span class="num">(${b.balls})</span>`; };
+  const sit = situation(st) || `${t('common.crr')} ${COP.runRate(inn.total, inn.legalBalls).toFixed(2)}`;
+  return `<div class="card hero" data-a="open-match:${m.id}">
+    <div class="row"><div class="lbl grow ballc">${esc(ton(tr))}</div><span class="livepill">${t('common.live')}</span></div>
+    <div class="small" style="opacity:.75;margin-top:4px">${tsn(m.a)}  ${t('common.vs')}  ${tsn(m.b)}</div>
+    <div style="flex:1"></div>
+    ${inn ? `<div class="row" style="align-items:flex-end"><div style="font-weight:900;font-size:20px">${tsn(inn.battingTeamId)}</div><div class="big num">${inn.total}/${inn.wickets}</div><div class="num" style="opacity:.75;padding-bottom:4px">${COP.oversText(inn.legalBalls)} ${t('common.ov')}</div></div>
+    <div class="small ell" style="margin-top:6px">${bat(inn.strikerId)} &nbsp;·&nbsp; ${bat(inn.nonStrikerId)}</div>
+    <div class="row" style="margin-top:8px"><div class="small grow ell ballc" style="font-weight:700">${esc(sit)}</div><div class="small" style="font-weight:700">${t('home.viewScore')}</div>${ic('chevron_right', 'flip')}</div>` : ''}
+  </div>`;
+}
+function tourTile(tr) {
+  const st = { ongoing: [t('common.ongoing'), 'success'], upcoming: [t('common.upcoming'), 'info'], completed: [t('common.completed'), 'neutral'] }[tr.status];
+  return `<div class="card tour" data-a="open-tour:${tr.id}" style="background:linear-gradient(135deg,${tr.color}2a,${tr.color}08)">
+    <div class="row"><span class="ms f" style="color:${tr.color}">emoji_events</span><div class="grow"></div>${badge(st[0], st[1])}</div><div style="flex:1"></div>
+    <div style="font-weight:700;font-size:15px">${esc(ton(tr))}</div><div class="small muted">${esc(tr.format)} · ${fmtDate(tr.start, { day: 'numeric', month: 'short', year: 'numeric' })}</div></div>`;
+}
+const isScorer = () => S.user && S.user.role === 'scorer';
+
+// ---------------- screens ----------------
+function vOnboarding() {
+  const slides = [['sports_cricket', 'onb.s1'], ['bolt', 'onb.s2'], ['emoji_events', 'onb.s3'], ['insights', 'onb.s4'], ['live_tv', 'onb.s5']];
+  const last = S.onb === slides.length;
+  let body;
+  if (last) body = `<div style="flex:1;display:flex;flex-direction:column;justify-content:center"><div style="text-align:center;color:var(--ball)">${ic('translate')}</div>
+    <h2 style="text-align:center;margin:12px 0 24px">${t('onb.chooseLanguage')}</h2>
+    <div class="langopt ${S.lang === 'en' ? 'on' : ''}" data-a="lang:en">English</div><div class="langopt ${S.lang === 'ur' ? 'on' : ''}" data-a="lang:ur" style="font-family:'Noto Nastaliq Urdu'">اردو</div></div>`;
+  else {
+    const [icon, k] = slides[S.onb];
+    body = `<div style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center">
+      ${S.onb === 0 ? `<img src="${LOGO}" style="width:250px;border-radius:20px;margin:0 auto" alt="Cric On Pro">` : `<div class="onb ico" style="padding:0;background:rgba(255,255,255,.1)"><span class="ms" style="font-size:64px;color:var(--ball)">${icon}</span></div>`}
+      <h1 style="margin:32px 0 10px;font-size:28px">${t(k + '.title')}</h1><div style="font-size:17px;opacity:.75">${t(k + '.body')}</div></div>`;
+  }
+  return `<div class="onb"><div style="text-align:end;min-height:40px">${last ? '' : `<button class="link" style="color:#fff;opacity:.7" data-a="onb-skip">${t('onb.skip')}</button>`}</div>${body}
+    <div class="dots">${[0, 1, 2, 3, 4, 5].map((i) => `<i class="${i === S.onb ? 'on' : ''}"></i>`).join('')}</div>
+    <button class="btn ballbtn" data-a="onb-next">${t(last ? 'onb.getStarted' : 'onb.next')}</button></div>`;
+}
+
+function vLogin() {
+  const roles = ['spectator', 'scorer', 'player', 'teamManager', 'organizer', 'superAdmin'];
+  return `<div class="scroll" style="padding:28px 24px">
+    <div style="text-align:center"><img src="${LOGO}" style="height:104px;border-radius:12px" alt=""></div>
+    <h2 style="margin:24px 0 4px">${t('auth.phoneTitle')}</h2><div class="muted small">${t('auth.phoneSubtitle')}</div>
+    <div dir="ltr" style="position:relative;margin-top:20px"><span style="position:absolute;left:16px;top:16px;font-size:18px;font-weight:600">🇵🇰 +92</span>
+      <input id="phone" class="field" style="padding-left:96px" inputmode="numeric" placeholder="3XX XXXXXXX" value="${esc(S.phone)}" maxlength="12"></div>
+    <div id="perr" class="small" style="color:var(--wkt);min-height:18px;margin-top:4px"></div>
+    <button class="btn" data-a="send-otp">${t('auth.sendOtp')}</button>
+    <div class="row" style="margin:22px 0"><hr style="flex:1;border:0;border-top:1px solid var(--divider)"><span class="small muted">${t('auth.orContinue')}</span><hr style="flex:1;border:0;border-top:1px solid var(--divider)"></div>
+    <div class="row"><button class="btn sec2" data-a="demo-role:spectator">${ic('g_mobiledata')} ${t('auth.google')}</button><button class="btn sec2" data-a="demo-role:spectator">${ic('mail')} ${t('auth.email')}</button></div>
+    <div class="card" style="margin-top:20px;cursor:default"><div class="row" style="font-weight:700"><span class="ms" style="color:var(--warn)">science</span>${t('auth.demoTitle')}</div>
+      <div class="chips" style="margin-top:12px">${roles.map((r) => `<button class="chip" data-a="demo-role:${r}">${t('roles.' + r)}</button>`).join('')}</div>
+      <div class="small muted" style="margin-top:8px">OTP: 123456</div></div>
+    <div class="small muted" style="text-align:center;margin-top:18px">${t('auth.terms')}</div></div>`;
+}
+function vOtp() {
+  return `${appbar('')}<div class="scroll" style="padding:8px 24px">
+    <h2 style="margin:0 0 4px">${t('auth.otpTitle')}</h2><div class="muted small" dir="ltr" style="text-align:start">${esc(t('auth.otpSent', { phone: S.phone }))}</div>
+    <input id="otp" dir="ltr" class="field" style="margin-top:24px;text-align:center;letter-spacing:14px;font-size:26px" inputmode="numeric" maxlength="6" placeholder="••••••">
+    <div id="oerr" class="small" style="color:var(--wkt);min-height:20px;margin-top:4px"></div>
+    <button class="btn" data-a="verify-otp">${t('auth.verify')}</button>
+    <div class="row" style="margin-top:12px;justify-content:space-between"><button class="link" data-a="back">${t('auth.changeNumber')}</button><span class="small muted">${t('auth.resendIn', { s: 52 })}</span></div></div>`;
+}
+
+function vHome() {
+  if (isScorer()) return vScorerHome('today');
+  const ms = Object.values(MATCHES);
+  const liveM = ms.filter((m) => m.status === 'live');
+  const up = ms.filter((m) => m.status === 'scheduled').sort((a, b) => a.at - b.at).slice(0, 3);
+  const res = ms.filter((m) => m.status === 'completed').sort((a, b) => b.at - a.at).slice(0, 3);
+  const days = Math.ceil((SUB.renew - Date.now()) / 864e5);
+  const plan = PLANS.find((p) => p.id === SUB.plan);
+  const sts = Object.values(stats(''));
+  const best = (f) => sts.reduce((a, b) => (f(b) > f(a) ? b : a));
+  const spot = (label, s, val) => `<div class="card" style="min-width:160px" data-a="open-player:${s.playerId}"><div class="lbl" style="color:var(--primary)">${label}</div><div style="margin:12px 0 8px">${avatar(s.playerId)}</div>
+      <div style="font-weight:700" class="ell">${esc(ps(s.playerId))}</div><div class="small muted">${tsn(PLAYERS[s.playerId].team)}</div><div style="font-size:20px;font-weight:800;color:var(--primary);margin-top:4px">${val}</div></div>`;
+  const rs = best((s) => s.batting.runs), wk = best((s) => s.bowling.wickets), mvp = best((s) => s.mvpPoints);
+  return `<div class="appbar"><img class="logo" src="${LOGO}" alt=""><div class="brandtxt grow">${t('app.name')}</div>
+      <button class="iconbtn" data-a="toast:${esc(t('profile.notifications'))}">${ic('notifications')}</button>
+      <div data-a="tab:profile" style="cursor:pointer"><div class="avatar" style="width:34px;height:34px;font-size:13px">${esc(S.user.name[0])}</div></div></div>
+    <div class="scroll" data-k="home">
+      <div class="pad" style="font-size:20px;font-weight:700">${esc(t('home.greeting', { name: S.user.name.split(' ')[0] }))}</div>
+      ${SUB.status === 'active' && days <= 7 ? `<div class="pad" style="margin-top:12px"><div class="card row" style="background:color-mix(in srgb,var(--warn) 12%,transparent);border:0;cursor:default"><span class="ms" style="color:var(--warn)">schedule</span><div class="grow small">${esc(t('sub.expiresIn', { plan: S.lang === 'ur' ? plan.ur : plan.en, days }))}</div><button class="link" data-a="push:subscription">${t('sub.renewNow')}</button></div></div>` : ''}
+      ${sec(t('home.liveNow') + (liveM.length ? ' ' + live() : ''))}
+      ${liveM.length ? `<div class="hrow">${liveM.map(heroCard).join('')}</div>` : empty('sports_cricket', t('empty.noLive'), t('empty.noLiveBody'))}
+      ${sec(t('home.upcoming'), t('common.seeAll'), 'tab:tournaments')}
+      <div class="pad stack">${up.map((m) => matchCard(m)).join('')}</div>
+      ${sec(t('home.featured'))}<div class="hrow">${Object.values(TOURS).map(tourTile).join('')}</div>
+      ${sec(t('home.latestResults'))}<div class="pad stack">${res.map((m) => matchCard(m)).join('')}</div>
+      ${sec(t('home.spotlight'), t('common.seeAll'), 'tab:rankings')}
+      <div class="hrow" style="padding-bottom:24px">${spot(t('home.topScorer'), rs, rs.batting.runs + ' ' + t('player.runs'))}${spot(t('home.bestBowler'), wk, wk.bowling.wickets + ' ' + t('player.wickets'))}${spot(t('home.mvp'), mvp, mvp.mvpPoints + ' pts')}</div>
+    </div>`;
+}
+
+function vTournaments() {
+  return `${appbar(t('nav.tournaments'), false)}<div class="scroll pad stack" style="padding-bottom:20px">${Object.values(TOURS).map((tr) => {
+    const st = { ongoing: [t('common.ongoing'), 'success'], upcoming: [t('common.upcoming'), 'info'] }[tr.status];
+    return `<div class="card row" data-a="open-tour:${tr.id}"><div style="width:54px;height:54px;border-radius:14px;background:${tr.color}22;display:grid;place-items:center"><span class="ms f" style="color:${tr.color};font-size:30px">emoji_events</span></div>
+      <div class="grow"><div style="font-weight:700">${esc(ton(tr))}</div><div class="small muted">${esc(tr.format)} · ${fmtDate(tr.start, { day: 'numeric', month: 'short' })} – ${fmtDate(tr.end, { day: 'numeric', month: 'short' })}</div>
+      <div class="row" style="margin-top:8px">${badge(st[0], st[1])}${tr.teams.length ? `<span class="small muted">${t('common.teamsCount', { n: tr.teams.length })}</span>` : ''}</div></div>${ic('chevron_right', 'flip')}</div>`;
+  }).join('')}</div>`;
+}
+
+function vLive() {
+  const l = Object.values(MATCHES).filter((m) => m.status === 'live');
+  return `${appbar(t('nav.live'), false)}<div class="scroll pad stack">${l.length ? l.map(heroCard).join('') : empty('sensors_off', t('empty.noLive'), t('empty.noLiveBody'), t('empty.viewUpcoming'), 'tab:home')}</div>`;
+}
+
+function pointsTable(tid) {
+  const rows = standings(tid);
+  const head = ['points.pos', 'points.team', 'points.p', 'points.w', 'points.l', 'points.t', 'points.nr', 'points.pts', 'points.nrr'].map((k) => `<th>${t(k)}</th>`).join('');
+  return `<div class="card" style="padding:4px 10px;cursor:default"><table class="sc"><tr>${head}</tr>${rows.map((r) => `<tr class="${r.qualified ? 'q' : ''}" data-a="open-team:${r.teamId}" style="cursor:pointer">
+    <td style="font-weight:700;font-family:Inter">${r.position}</td><td style="text-align:start;font-weight:600">${tsn(r.teamId)}</td><td>${r.played}</td><td>${r.won}</td><td>${r.lost}</td><td>${r.tied}</td><td>${r.noResult}</td><td style="font-weight:800">${r.points}</td><td class="small">${nrr(r.nrr)}</td></tr>`).join('')}</table>
+    <div class="row small muted" style="padding:10px 4px"><span style="width:3px;height:14px;background:var(--primary)"></span>${t('points.qualified')}</div></div>`;
+}
+function leaders(list, val, sub) {
+  return `<div class="card list" style="padding:0;cursor:default">${list.map((s, i) => `<div class="row" data-a="open-player:${s.playerId}" style="cursor:pointer">
+    <div style="width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:${i === 0 ? 'var(--primary)' : 'var(--chip)'};color:${i === 0 ? '#fff' : 'inherit'}">${i + 1}</div>
+    <div class="grow"><div style="font-weight:600" class="ell">${esc(pn(s.playerId))}</div><div class="small muted">${tsn(PLAYERS[s.playerId].team)} · ${sub(s)}</div></div>
+    <div style="font-size:20px;font-weight:800;color:var(--primary)" class="num">${val(s)}</div></div>`).join('')}</div>`;
+}
+function vTournament(p) {
+  const tr = TOURS[p.id];
+  const tab = S.subTab[p.id] || 'overview';
+  const tabs = ['overview', 'matches', 'teams', 'points', 'stats'];
+  const ms = Object.values(MATCHES).filter((m) => m.tid === tr.id).sort((a, b) => a.at - b.at);
+  let body = '';
+  if (tab === 'overview') {
+    const top = tr.teams.length ? standings(tr.id)[0] : null;
+    body = `<div class="pad stack" style="padding-top:16px">${ms.filter((m) => m.status === 'live').map((m) => matchCard(m, false)).join('')}
+      <div class="card" style="cursor:default"><div style="font-size:14px;line-height:1.5">${esc(tr.desc)}</div><div style="margin-top:10px">
+      <div class="kv"><span>${t('tournament.organizer')}</span><span>Cric On Pro</span></div><div class="kv"><span>${t('tournament.format')}</span><span>${esc(tr.format)}</span></div>
+      <div class="kv"><span>${t('tournament.venue')}</span><span>${tr.venues.map((v) => VENUES[v]).join(', ')}</span></div></div></div>
+      ${top && top.played ? `<div class="card row" data-a="open-team:${top.teamId}">${teamBadge(top.teamId, 48)}<div class="grow"><div class="lbl" style="color:var(--primary)">${t('tournament.tableTopper')}</div><div style="font-weight:700">${esc(tn(top.teamId))}</div><div class="small muted">${top.points} ${t('points.pts')} · ${t('points.nrr')} ${nrr(top.nrr)}</div></div><span class="ms f" style="color:var(--warn);font-size:32px">workspace_premium</span></div>` : ''}
+      ${tr.sponsors.length ? `<div class="sec" style="padding:8px 0 0"><h3>${t('tournament.sponsors')}</h3></div><div class="chips">${tr.sponsors.map((s) => `<span class="chip" style="cursor:default">${ic('handshake')} ${esc(s)}</span>`).join('')}</div>` : ''}</div>`;
+  } else if (tab === 'matches') body = `<div class="pad stack" style="padding-top:16px;padding-bottom:20px">${ms.length ? ms.map((m) => matchCard(m, false)).join('') : empty('event_busy', t('empty.noMatches'))}</div>`;
+  else if (tab === 'teams') body = `<div class="pad stack" style="padding-top:16px">${tr.teams.length ? tr.teams.map((id) => `<div class="card row" data-a="open-team:${id}">${teamBadge(id, 46)}<div class="grow"><div style="font-weight:700">${esc(tn(id))}</div><div class="small muted">${esc(TEAMS[id].corp)} · ${TEAMS[id].squad.length} ${t('team.squad')}</div></div>${ic('chevron_right', 'flip')}</div>`).join('') : empty('groups', t('empty.noResults'))}</div>`;
+  else if (tab === 'points') body = `<div class="pad" style="padding-top:16px">${tr.teams.length ? pointsTable(tr.id) : empty('table_chart', t('empty.noMatches'))}</div>`;
+  else {
+    const s = Object.values(stats(tr.id));
+    body = s.length ? `${sec(t('tournament.topRunScorers'))}<div class="pad">${leaders([...s].sort((a, b) => b.batting.runs - a.batting.runs).slice(0, 5), (x) => x.batting.runs, (x) => 'SR ' + x.batting.strikeRate.toFixed(1))}</div>
+      ${sec(t('tournament.topWicketTakers'))}<div class="pad" style="padding-bottom:24px">${leaders(s.filter((x) => x.bowling.balls).sort((a, b) => b.bowling.wickets - a.bowling.wickets || a.bowling.economy - b.bowling.economy).slice(0, 5), (x) => x.bowling.wickets, (x) => 'Econ ' + x.bowling.economy.toFixed(2))}</div>` : empty('insights', t('empty.noMatches'));
+  }
+  return `<div class="header"><div class="row"><button class="iconbtn" data-a="back">${ic('arrow_back', 'flip')}</button><div class="grow" style="font-weight:800;font-size:18px">${esc(ton(tr))}</div></div>
+    <div class="small" style="opacity:.75;padding:6px 8px 0">${esc(tr.format)} · ${fmtDate(tr.start, { day: 'numeric', month: 'short' })} – ${fmtDate(tr.end, { day: 'numeric', month: 'short', year: 'numeric' })}</div></div>
+    <div class="tabs">${tabs.map((x) => `<button class="${tab === x ? 'on' : ''}" data-a="subtab:${p.id}:${x}">${t('tournament.' + x)}</button>`).join('')}</div>
+    <div class="scroll" data-k="tour-${p.id}-${tab}">${body}</div>`;
+}
+
+function dismissal(b) {
+  if (b.retiredHurt) return t('wicket.retiredHurt');
+  if (!b.isOut) return t('match.notOut');
+  const d = b.dismissal, bw = ps(d.bowlerId), f = ps(d.fielderId);
+  return { bowled: 'b ' + bw, lbw: 'lbw b ' + bw, caught: d.fielderId && d.fielderId === d.bowlerId ? 'c & b ' + bw : `c ${f} b ${bw}`, stumped: `st ${f} b ${bw}`, runOut: d.fielderId ? `run out (${f})` : 'run out', hitWicket: 'hit wicket b ' + bw, retiredOut: t('wicket.retiredOut') }[d.kind] || t('wicket.other');
+}
+function scorecard(st, mid) {
+  const idx = Math.min(S.subTab['inn-' + mid] != null ? S.subTab['inn-' + mid] : st.innings.length - 1, st.innings.length - 1);
+  const inn = st.innings[idx];
+  const seg = st.innings.length > 1 ? `<div class="chips" style="padding:14px 16px 0">${st.innings.map((x, i) => `<button class="chip ${i === idx ? 'on' : ''}" data-a="innsel:${mid}:${i}">${tsn(x.battingTeamId)} ${x.total}/${x.wickets}</button>`).join('')}</div>` : '';
+  const bat = inn.battingOrder.map((id) => { const b = inn.batters[id]; const at = id === inn.strikerId || id === inn.nonStrikerId;
+    return `<tr data-a="open-player:${id}" style="cursor:pointer"><td><div style="font-weight:600">${esc(pn(id))}${at ? ' *' : ''}</div><div class="dis">${esc(dismissal(b))}</div></td><td style="font-weight:800">${b.runs}</td><td>${b.balls}</td><td>${b.fours}</td><td>${b.sixes}</td><td>${(b.balls ? b.runs * 100 / b.balls : 0).toFixed(1)}</td></tr>`; }).join('');
+  const yet = TEAMS[inn.battingTeamId].squad.filter((id) => !inn.batters[id]);
+  const bowl = inn.bowlingOrder.filter((id) => inn.bowlers[id].balls || inn.bowlers[id].wides).map((id) => { const b = inn.bowlers[id];
+    return `<tr><td style="font-weight:600">${esc(pn(id))}${id === inn.bowlerId ? ' *' : ''}</td><td>${COP.oversText(b.balls)}</td><td>${b.maidens}</td><td>${b.runs}</td><td style="font-weight:800">${b.wickets}</td><td>${COP.economy(b.runs, b.balls).toFixed(2)}</td></tr>`; }).join('');
+  const maxP = Math.max(1, ...inn.partnerships.map((p) => p.runs));
+  const ex = inn.extras;
+  return `${seg}<div class="pad stack" style="padding-top:14px;padding-bottom:30px">
+    <div class="card" style="padding:4px 10px;cursor:default"><table class="sc"><tr><th>${t('match.batter')}</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr>${bat}</table>
+      <div class="kv small" style="padding:10px 4px 0"><span>${t('match.extras')}</span><span class="num">${ex.wide + ex.noBall + ex.bye + ex.legBye} (w ${ex.wide}, nb ${ex.noBall}, b ${ex.bye}, lb ${ex.legBye})</span></div>
+      <div class="kv" style="padding:4px 4px 10px"><span style="color:var(--ink);font-weight:700">${t('match.total')}</span><span class="num">${inn.total}/${inn.wickets} (${COP.oversText(inn.legalBalls)} ${t('common.ov')}, RR ${COP.runRate(inn.total, inn.legalBalls).toFixed(2)})</span></div>
+      ${yet.length ? `<div class="small muted" style="padding:0 4px 10px">${t('match.yetToBat')}: ${yet.map(ps).map(esc).join(', ')}</div>` : ''}</div>
+    <div class="card" style="padding:4px 10px;cursor:default"><table class="sc"><tr><th>${t('match.bowler')}</th><th>O</th><th>M</th><th>R</th><th>W</th><th>Econ</th></tr>${bowl}</table></div>
+    ${inn.fow.length ? `<div class="card" style="cursor:default"><div style="font-weight:700;margin-bottom:8px">${t('match.fow')}</div><div class="small" style="line-height:1.8">${inn.fow.map((f) => `<span class="num">${f.wicketNo}-${f.score}</span> (${esc(ps(f.playerId))}, ${COP.oversText(f.legalBalls)})`).join(' &nbsp; ')}</div></div>` : ''}
+    <div class="card" style="cursor:default"><div style="font-weight:700;margin-bottom:6px">${t('match.partnerships')}</div>${inn.partnerships.map((p) => `<div style="padding:6px 0"><div class="row small"><div class="grow ell">${esc(ps(p.batter1Id))} & ${esc(ps(p.batter2Id))}</div><b class="num">${p.runs}${p.unbroken ? '*' : ''} (${p.balls})</b></div><div class="prog"><i style="width:${p.runs / maxP * 100}%"></i></div></div>`).join('')}</div>
+  </div>`;
+}
+function commentary(st) {
+  const items = [];
+  st.innings.forEach((inn) => inn.balls.forEach((b) => items.push([inn, b])));
+  items.reverse();
+  return `<div class="list" style="padding-bottom:30px">${items.slice(0, 150).map(([inn, b]) => {
+    const c = ballCls(b), over = b.legal ? `${b.overIndex}.${b.ballInOver}` : `${b.overIndex}.${b.ballInOver + 1}`;
+    return `<div class="row" style="align-items:flex-start"><div style="width:44px;text-align:center;flex-shrink:0"><div class="small num" style="font-weight:600">${over}</div><span class="bl ${c}" style="height:22px;min-width:26px;font-size:11px;margin-top:2px">${esc(b.label)}</span></div>
+      <div class="grow"><div style="font-size:14px;${c ? 'font-weight:700' : ''}" class="ur-lh">${esc(COP.commentaryFor(b, ps, S.lang))}</div><div class="small muted">${esc(ps(b.bowlerId))} → ${esc(ps(b.strikerId))} · ${tsn(inn.battingTeamId)}</div></div></div>`; }).join('')}</div>`;
+}
+function vMatch(p) {
+  const m = MATCHES[p.id], st = m.status === 'scheduled' ? null : stateOf(m.id), inn = st && cur(st), tr = TOURS[m.tid];
+  const tab = S.subTab['m-' + m.id] || 'scorecard';
+  let head = '';
+  if (!inn) head = `<div style="font-size:16px;font-weight:600;margin-top:6px">${esc(t('match.scheduled', { time: matchTime(m.at) }))}</div>`;
+  else {
+    const rrr = COP.requiredRunRate(inn, st.config);
+    const batLine = (id) => { if (!id) return ''; const b = inn.batters[id]; return `<div class="row small"><div class="grow ell">${esc(ps(id))}${id === inn.strikerId ? ' *' : ''}</div><b class="num">${b.runs} (${b.balls})</b><span class="num" style="width:58px;text-align:end;opacity:.7">SR ${(b.balls ? b.runs * 100 / b.balls : 0).toFixed(0)}</span></div>`; };
+    const bid = inn.bowlerId || inn.lastOverBowlerId, bw = bid && inn.bowlers[bid];
+    head = st.innings.map((i) => `<div class="row" style="margin-top:2px"><div class="grow" style="${i === inn ? 'font-weight:700' : 'opacity:.75'}">${esc(tn(i.battingTeamId))}</div><div class="num" style="font-weight:900;font-size:${i === inn ? 28 : 17}px">${i.total}/${i.wickets}</div><div class="small num" style="opacity:.7;width:44px;text-align:end">(${COP.oversText(i.legalBalls)})</div></div>`).join('')
+      + `<div class="row small" style="gap:16px;margin-top:4px;font-weight:600"><span>${t('common.crr')} ${COP.runRate(inn.total, inn.legalBalls).toFixed(2)}</span>${inn.target ? `<span>${t('common.target')} ${inn.target}</span>` : ''}${rrr != null && !inn.complete ? `<span>${t('common.rrr')} ${rrr.toFixed(2)}</span>` : ''}</div>`
+      + (situation(st) ? `<div class="small ballc" style="font-weight:700;margin-top:4px">${esc(situation(st))}</div>` : '')
+      + (!inn.complete ? `<div style="margin-top:10px">${batLine(inn.strikerId)}${batLine(inn.nonStrikerId)}${bw ? `<div class="row small" style="opacity:.75;margin-top:2px">${ic('sports_baseball')}<div class="grow">${esc(ps(bid))}</div><span class="num">${COP.oversText(bw.balls)}-${bw.maidens}-${bw.runs}-${bw.wickets}</span></div>` : ''}<div class="hdr" style="margin-top:8px">${ballsRow(inn)}</div></div>` : '');
+  }
+  let body;
+  if (tab === 'scorecard') body = inn ? scorecard(st, m.id) : empty('sports_cricket', t('match.yetToStart'));
+  else if (tab === 'commentary') body = inn ? commentary(st) : empty('chat_bubble', t('match.yetToStart'));
+  else {
+    let pom = null;
+    if (st && st.result.type !== 'inProgress') { const s = [...COP.aggregateCareer([st]).values()]; pom = s.reduce((a, b) => (b.mvpPoints > a.mvpPoints ? b : a)).playerId; }
+    body = `<div class="pad" style="padding-top:16px"><div class="card" style="cursor:default">
+      ${st && st.result.type !== 'inProgress' ? `<div class="kv"><span>${t('match.result')}</span><span>${esc(resultText(st))}</span></div>` : ''}
+      ${pom ? `<div class="kv" data-a="open-player:${pom}" style="cursor:pointer"><span>🏅 ${t('match.pom')}</span><span>${esc(pn(pom))}</span></div>` : ''}
+      <div class="kv"><span>${t('nav.tournaments')}</span><span>${esc(ton(tr))}</span></div><div class="kv"><span>${t('tournament.dates')}</span><span>${matchTime(m.at)}</span></div>
+      <div class="kv"><span>${t('tournament.venue')}</span><span>${VENUES[m.venue]}</span></div><div class="kv"><span>${t('tournament.format')}</span><span>${m.overs} ${t('common.overs')}</span></div></div>
+      <button class="btn sec2" style="margin-top:14px" data-a="share:${m.id}">${ic('share')} ${t('common.share')}</button></div>`;
+  }
+  const canScore = S.user && (S.user.role === 'organizer' || S.user.role === 'superAdmin' || (S.user.role === 'scorer' && m.scorers.includes('demo-scorer'))) && m.status !== 'completed';
+  return `<div class="header"><div class="row"><button class="iconbtn" data-a="back">${ic('arrow_back', 'flip')}</button><div class="grow lbl ballc">${esc(ton(tr))} · ${esc(m.stage || t('common.match', { n: m.no }))}</div>${m.status === 'live' ? '<span class="livepill">' + t('common.live') + '</span>' : ''}<button class="iconbtn" data-a="share:${m.id}">${ic('share')}</button></div>
+    <div style="padding:0 6px">${head}</div></div>
+    <div class="tabs">${['scorecard', 'commentary', 'info'].map((x) => `<button class="${tab === x ? 'on' : ''}" data-a="subtab:m-${m.id}:${x}">${t('match.' + x)}</button>`).join('')}</div>
+    <div class="scroll" data-k="match-${m.id}-${tab}">${body}</div>
+    ${canScore ? `<button class="btn fab" style="bottom:20px" data-a="push:score:${m.id}">${ic('scoreboard')} ${t('score.title')}</button>` : ''}`;
+}
+
+function vTeam(p) {
+  const tm = TEAMS[p.id], tr = Object.values(TOURS).find((x) => x.teams.includes(tm.id));
+  const row = tr && standings(tr.id).find((r) => r.teamId === tm.id);
+  const up = Object.values(MATCHES).filter((m) => (m.a === tm.id || m.b === tm.id) && m.status !== 'completed').sort((a, b) => a.at - b.at).slice(0, 2);
+  return `${appbar(esc(tn(tm.id)))}<div class="scroll" style="padding-bottom:24px"><div class="pad"><div class="card" style="cursor:default">
+    <div class="row">${teamBadge(tm.id, 62)}<div class="grow"><div style="font-weight:800;font-size:18px">${esc(tn(tm.id))}</div><div class="small muted">${esc(tm.corp)}</div><div class="small muted">${t('team.captain')}: ${esc(ps(tm.captain))}</div></div></div>
+    ${row ? `<div class="statgrid" style="grid-template-columns:repeat(5,1fr);margin-top:16px;border-top:1px solid var(--divider);padding-top:14px"><div><b>${row.played}</b><span>${t('points.p')}</span></div><div><b>${row.won}</b><span>${t('points.w')}</span></div><div><b>${row.lost}</b><span>${t('points.l')}</span></div><div><b>${row.points}</b><span>${t('points.pts')}</span></div><div><b style="font-size:15px">${nrr(row.nrr)}</b><span>${t('points.nrr')}</span></div></div>
+      <div class="row small muted" style="margin-top:12px">${t('team.recentForm')} <div class="form">${row.form.map((f) => `<i style="background:${f === 'W' ? 'var(--primary)' : f === 'L' ? 'var(--wkt)' : 'var(--muted)'}">${f}</i>`).join('')}</div></div>` : ''}</div></div>
+    ${up.length ? sec(t('team.upcoming')) + `<div class="pad stack">${up.map((m) => matchCard(m)).join('')}</div>` : ''}
+    ${sec(t('team.squad'))}<div class="pad"><div class="card list" style="padding:0;cursor:default">${tm.squad.map((id) => `<div class="row" data-a="open-player:${id}" style="cursor:pointer">${avatar(id, 38)}<div class="grow"><div style="font-weight:600">${esc(pn(id))}${id === tm.captain ? ' (C)' : ''}</div><div class="small muted">${t('player.role.' + PLAYERS[id].role)}</div></div>${ic('chevron_right', 'flip')}</div>`).join('')}</div></div></div>`;
+}
+
+function vPlayer(p) {
+  const pl = PLAYERS[p.id], s = stats('')[p.id] || { matches: 0, batting: { innings: 0, runs: 0, balls: 0, fours: 0, sixes: 0, highest: 0, highestNotOut: false, average: null, strikeRate: 0, fifties: 0, hundreds: 0 }, bowling: { balls: 0, runs: 0, wickets: 0, economy: 0, average: null, bestWickets: 0, bestRuns: 0, innings: 0 }, fielding: { catches: 0, runOuts: 0, stumpings: 0 }, mvpPoints: 0 };
+  const b = s.batting, w = s.bowling, f = s.fielding;
+  const grid = (items) => `<div class="statgrid">${items.map(([k, v]) => `<div><b>${v}</b><span>${k}</span></div>`).join('')}</div>`;
+  return `<div class="header" style="padding-bottom:22px"><div class="row"><button class="iconbtn" data-a="back">${ic('arrow_back', 'flip')}</button></div>
+    <div class="row" style="padding:6px 6px 0;align-items:flex-end;gap:16px">${avatar(pl.id, 80, 'background:rgba(255,255,255,.15);color:#fff')}
+    <div class="grow"><div style="font-size:22px;font-weight:800">${esc(pn(pl.id))}</div><div class="small" style="opacity:.75">${esc(tn(pl.team))} · ${t('player.role.' + pl.role)}</div>
+    <div class="row" style="margin-top:8px">${pl.verified ? `<span class="badge" style="background:var(--ball);color:var(--deep)">${ic('verified', 'f')} ${t('player.verified')}</span>` : ''}<span class="small num" style="opacity:.75">${pl.cop}</span></div></div></div></div>
+    <div class="scroll pad stack" style="padding-top:16px;padding-bottom:24px">
+      <div class="card" style="cursor:default">${grid([[t('player.matches'), s.matches], [t('player.runs'), b.runs], [t('player.wickets'), w.wickets]])}</div>
+      <div class="card" style="cursor:default"><div style="font-weight:700;margin-bottom:12px">${t('player.batting')}</div>${grid([[t('player.innings'), b.innings], [t('player.average'), b.average == null ? '-' : b.average.toFixed(2)], [t('player.sr'), b.strikeRate.toFixed(1)], [t('player.hs'), b.innings ? b.highest + (b.highestNotOut ? '*' : '') : '-'], ['4s', b.fours], ['6s', b.sixes]])}</div>
+      <div class="card" style="cursor:default"><div style="font-weight:700;margin-bottom:12px">${t('player.bowling')}</div>${grid([[t('player.overs'), COP.oversText(w.balls)], [t('player.wickets'), w.wickets], [t('player.econ'), w.balls ? w.economy.toFixed(2) : '-'], [t('player.average'), w.average == null ? '-' : w.average.toFixed(2)], [t('player.best'), w.innings ? w.bestWickets + '/' + w.bestRuns : '-'], [t('player.mvpPoints'), s.mvpPoints]])}</div>
+      <div class="card" style="cursor:default"><div style="font-weight:700;margin-bottom:12px">${t('player.fielding')}</div>${grid([[t('player.catches'), f.catches], [t('player.runOuts'), f.runOuts], [t('player.stumpings'), f.stumpings]])}</div>
+      <div class="card" style="cursor:default"><div class="kv"><span>${t('player.battingStyle')}</span><span>${pl.bat}</span></div><div class="kv"><span>${t('player.bowlingStyle')}</span><span>${pl.bowl}</span></div><div class="kv"><span>${t('player.corporate')}</span><span>${esc(TEAMS[pl.team].corp)}</span></div></div>
+    </div>`;
+}
+
+const CATS = [
+  ['rank.runs', (s) => s.batting.runs, (s) => s.batting.runs, (s) => s.batting.innings > 0],
+  ['rank.wickets', (s) => s.bowling.wickets, (s) => s.bowling.wickets, (s) => s.bowling.balls > 0],
+  ['rank.strikeRate', (s) => s.batting.strikeRate, (s) => s.batting.strikeRate.toFixed(1), (s) => s.batting.balls >= 30],
+  ['rank.economy', (s) => -s.bowling.economy, (s) => s.bowling.economy.toFixed(2), (s) => s.bowling.balls >= 24],
+  ['rank.sixes', (s) => s.batting.sixes, (s) => s.batting.sixes, (s) => s.batting.sixes > 0],
+  ['rank.fours', (s) => s.batting.fours, (s) => s.batting.fours, (s) => s.batting.fours > 0],
+  ['rank.mvp', (s) => s.mvpPoints, (s) => s.mvpPoints, (s) => s.mvpPoints > 0],
+];
+function vRankings() {
+  const [, val, disp, ok] = CATS[S.rankCat];
+  const rows = Object.values(stats(S.rankTour)).filter(ok).sort((a, b) => val(b) - val(a)).slice(0, 25);
+  const medal = ['#D4A017', '#9CA3AF', '#B87333'];
+  return `${appbar(t('rank.title'), false)}
+    <div class="hrow" style="padding-bottom:8px">${CATS.map((c, i) => `<button class="chip ${i === S.rankCat ? 'on' : ''}" style="white-space:nowrap" data-a="rank:${i}">${t(c[0])}</button>`).join('')}</div>
+    <div class="hrow" style="padding-bottom:10px"><button class="chip ${S.rankTour === '' ? 'on' : ''}" data-a="rtour:">${t('rank.allTournaments')}</button>${Object.values(TOURS).filter((x) => x.teams.length).map((x) => `<button class="chip ${S.rankTour === x.id ? 'on' : ''}" style="white-space:nowrap" data-a="rtour:${x.id}">${esc(ton(x))}</button>`).join('')}</div>
+    <div class="scroll pad stack" data-k="rank-${S.rankCat}-${S.rankTour}" style="padding-bottom:20px">${rows.map((s, i) => `<div class="card row" data-a="open-player:${s.playerId}"><div style="width:26px;font-weight:900;font-size:16px;color:${medal[i] || 'inherit'}" class="num">${i + 1}</div>${avatar(s.playerId, 40)}
+      <div class="grow"><div style="font-weight:600" class="ell">${esc(pn(s.playerId))}</div><div class="small muted">${tsn(PLAYERS[s.playerId].team)} · ${s.matches} ${t('player.matches')}</div></div><div style="font-size:20px;font-weight:900;color:var(--primary)" class="num">${disp(s)}</div></div>`).join('')}</div>`;
+}
+
+function vProfile() {
+  const plan = PLANS.find((p) => p.id === SUB.plan);
+  const row = (icon, label, val, act, color) => `<div class="row" style="padding:14px;cursor:pointer;${color ? 'color:' + color : ''}" data-a="${act}">${ic(icon)}<div class="grow">${label}</div>${val ? `<span class="small muted">${val}</span>` : ''}${ic('chevron_right', 'flip')}</div>`;
+  const grp = (rows) => `<div class="card list" style="padding:0;cursor:default;margin-top:12px">${rows.join('')}</div>`;
+  return `${appbar(t('profile.title'), false)}<div class="scroll pad" style="padding-bottom:24px">
+    <div class="card row" style="cursor:default"><div class="avatar" style="width:56px;height:56px;font-size:20px">${esc(S.user.name[0])}</div><div class="grow"><div style="font-weight:800;font-size:18px">${esc(S.user.name)}</div><div class="small muted num" dir="ltr" style="text-align:start">${esc(S.user.phone)}</div><div style="margin-top:6px">${badge(t('roles.' + S.user.role), 'info')}</div></div></div>
+    <div class="card" style="cursor:default;margin-top:12px"><div class="lbl">${t('auth.demoTitle')} · ${t('roles.spectator')} / ${t('roles.scorer')}…</div><div class="chips" style="margin-top:10px">${['spectator', 'scorer', 'player', 'organizer'].map((r) => `<button class="chip ${S.user.role === r ? 'on' : ''}" data-a="demo-role:${r}">${t('roles.' + r)}</button>`).join('')}</div></div>
+    ${grp([row('workspace_premium', t('profile.subscription'), S.lang === 'ur' ? plan.ur : plan.en, 'push:subscription'), row('receipt_long', t('profile.paymentHistory'), '', 'push:payments')])}
+    ${grp([`<div class="row" style="padding:14px">${ic('translate')}<div class="grow">${t('profile.language')}</div><div class="chips"><button class="chip ${S.lang === 'en' ? 'on' : ''}" data-a="lang:en">English</button><button class="chip ${S.lang === 'ur' ? 'on' : ''}" data-a="lang:ur">اردو</button></div></div>`,
+      `<div class="row" style="padding:14px">${ic('dark_mode')}<div class="grow">${t('appearance.dark')}</div><button class="switch ${S.dark ? 'on' : ''}" data-a="dark" aria-label="dark mode"></button></div>`,
+      row('notifications', t('profile.notifications'), '', 'toast:' + t('notif.milestones')), row('lock', t('profile.privacy'), '', 'noop')])}
+    ${grp([row('help', t('profile.help'), '', 'noop'), row('info', t('profile.about'), 'v1.0', 'noop')])}
+    ${grp([row('logout', t('profile.logout'), '', 'logout'), row('delete', t('profile.deleteAccount'), '', 'toast:' + t('profile.deleteConfirm'), 'var(--wkt)')])}
+  </div>`;
+}
+
+// ---------------- subscriptions & payments ----------------
+const priceText = (p) => (p.price == null ? t('sub.contactUs') : p.price === 0 ? t('sub.free') : `${pkr(p.price)} ${t({ month: 'sub.perMonth', tournament: 'sub.perTournament', year: 'sub.perYear' }[p.period])}`);
+function vSubscription() {
+  const plan = PLANS.find((p) => p.id === SUB.plan), days = Math.ceil((SUB.renew - Date.now()) / 864e5);
+  const st = { active: ['sub.status.active', 'success'], pending: ['sub.status.pending', 'warn'], cancelled: ['sub.status.cancelled', 'neutral'] }[SUB.status];
+  return `${appbar(t('sub.title'))}<div class="scroll pad stack" style="padding-bottom:24px">
+    ${SUB.status === 'active' ? `<div class="card row" style="background:color-mix(in srgb,var(--warn) 12%,transparent);border:0;cursor:default"><span class="ms" style="color:var(--warn)">schedule</span><div class="small grow">${esc(t('sub.expiresIn', { plan: S.lang === 'ur' ? plan.ur : plan.en, days }))}</div></div>` : ''}
+    <div class="card" style="cursor:default"><div class="lbl" style="color:var(--primary)">${t('sub.current')}</div><div class="row" style="margin-top:4px"><div class="grow" style="font-size:22px;font-weight:800">${S.lang === 'ur' ? plan.ur : plan.en}</div>${badge(t(st[0]), st[1])}</div>
+      <div class="small muted">${priceText(plan)}</div><hr style="border:0;border-top:1px solid var(--divider);margin:14px 0">
+      <div class="kv"><span>${t('sub.status')}</span><span>${t(st[0])}</span></div>${SUB.start ? `<div class="kv"><span>${t('sub.start')}</span><span>${fmtDate(SUB.start, { day: 'numeric', month: 'short', year: 'numeric' })}</span></div><div class="kv"><span>${t('sub.renew')}</span><span>${fmtDate(SUB.renew, { day: 'numeric', month: 'short', year: 'numeric' })}</span></div>` : ''}<div class="kv"><span>${t('sub.method')}</span><span>${t(SUB.method)}</span></div></div>
+    <button class="btn" data-a="checkout:${plan.id}">${ic('autorenew')} ${t('sub.renewNow')}</button>
+    <button class="btn sec2" data-a="push:plans">${t('sub.upgrade')}</button>
+    ${SUB.status === 'active' ? `<button class="link" style="color:var(--wkt);width:100%;padding:10px" data-a="cancel-sub">${t('sub.cancel')}</button>` : ''}</div>`;
+}
+function vPlans() {
+  return `${appbar(t('sub.plans'))}<div class="scroll pad stack" style="padding-bottom:24px">${PLANS.map((p) => {
+    const curP = p.id === SUB.plan && SUB.status === 'active';
+    return `<div class="card" style="cursor:default;${p.hot ? 'border:2px solid var(--primary)' : ''}"><div class="row"><div class="grow" style="font-size:19px;font-weight:800">${S.lang === 'ur' ? p.ur : p.en}</div>${curP ? badge(t('sub.currentBadge'), 'success') : p.hot ? badge(t('sub.popular'), 'info') : ''}</div>
+      <div style="color:var(--primary);font-weight:700;margin:4px 0 10px">${priceText(p)}</div>${p.feats.map((f) => `<div class="row small" style="padding:3px 0"><span class="ms f" style="color:var(--primary);font-size:18px">check_circle</span>${t(f)}</div>`).join('')}
+      ${!curP && p.price !== 0 ? `<button class="btn ${p.hot ? '' : 'sec2'}" style="margin-top:12px" data-a="${p.price == null ? 'toast:WhatsApp: +92 3XX XXXXXXX' : 'checkout:' + p.id}">${p.price == null ? t('sub.contactUs') : t('sub.select')}</button>` : ''}</div>`;
+  }).join('')}</div>`;
+}
+function vCheckout() {
+  const c = S.checkout, p = PLANS.find((x) => x.id === c.plan);
+  const methods = [['bankTransfer', 'pay.bank', 'account_balance'], ['easypaisa', 'pay.easypaisa', 'phone_android'], ['jazzcash', 'pay.jazzcash', 'phone_iphone'], ['card', 'pay.card', 'credit_card']];
+  if (c.done) return `${appbar(t('pay.checkout'))}<div class="scroll">${empty('hourglass_top', t('sub.status.pending'), t('pay.pendingNote'), t('pay.history'), 'replace:payments')}</div>`;
+  const copy = (k, v) => `<div class="row" style="padding:8px 0"><div class="grow"><div class="small muted">${t(k)}</div><div style="font-weight:700" class="num" dir="ltr">${esc(v)}</div></div><button class="iconbtn" data-a="copy:${esc(v)}">${ic('content_copy')}</button></div>`;
+  let body;
+  if (!c.ref) body = `<div class="card list" style="padding:0;cursor:default">${methods.map(([m, k, i]) => `<div class="row" style="padding:14px;cursor:pointer" data-a="method:${m}"><span class="ms ${c.method === m ? 'f' : ''}" style="color:var(--primary)">${c.method === m ? 'radio_button_checked' : 'radio_button_unchecked'}</span><div class="grow">${t(k)}</div>${ic(i)}</div>`).join('')}</div>
+    <button class="btn" style="margin-top:16px" data-a="pay-next">${t('onb.next')}</button>`;
+  else {
+    const wallet = c.method === 'easypaisa' || c.method === 'jazzcash';
+    body = `<div class="card" style="cursor:default">${copy('pay.amount', pkr(p.price))}${copy('pay.reference', c.ref)}
+      ${wallet ? `<div class="small" style="padding:6px 0">${t('pay.walletSteps', { wallet: t('pay.' + c.method) })}</div>${copy('pay.walletNumber', '03XX XXXXXXX')}${copy('pay.accountTitle', 'CRIC ON PRO')}`
+        : `${copy('pay.bankName', 'Your Bank Name')}${copy('pay.accountTitle', 'CRIC ON PRO')}${copy('pay.iban', 'PK00 XXXX 0000 0000 0000 0000')}`}
+      <div class="small muted" style="padding-top:6px">${t('pay.referenceNote')}</div></div>
+      <label class="btn sec2" style="margin-top:14px;cursor:pointer">${ic(c.file ? 'check_circle' : 'upload_file')} ${c.file ? t('pay.receiptAttached') + ' · ' + esc(c.file) : t('pay.uploadReceipt')}<input type="file" accept="image/*,application/pdf" id="receipt" style="display:none"></label>
+      <button class="btn" style="margin-top:12px" data-a="pay-submit" ${c.file ? '' : 'disabled'}>${t('pay.submit')}</button>`;
+  }
+  return `${appbar(t('pay.checkout'))}<div class="scroll pad" style="padding-bottom:24px">
+    <div class="card row" style="cursor:default;margin-bottom:14px"><div class="grow" style="font-weight:700">${S.lang === 'ur' ? p.ur : p.en}</div><div style="color:var(--primary);font-weight:700">${priceText(p)}</div></div>
+    ${body}<div class="row small muted" style="margin-top:14px">${ic('lock')}${t('pay.secureNote')}</div></div>`;
+}
+function vPayments() {
+  const tone = { paid: 'success', pending: 'warn', failed: 'danger', refunded: 'neutral' };
+  return `${appbar(t('pay.history'))}<div class="scroll pad stack" style="padding-bottom:24px">${PAYMENTS.map((p) => `<div class="card" style="cursor:default"><div class="row"><div class="grow num" style="font-weight:700" dir="ltr">${p.inv}</div>${badge(t('pay.status.' + p.status), tone[p.status])}</div>
+    <div class="small muted" style="margin-top:4px">${p.plan} · ${t(p.method)}</div><div class="row" style="margin-top:8px"><div class="grow small muted">${fmtDate(p.date, { day: 'numeric', month: 'short', year: 'numeric' })}</div><b>${pkr(p.amt)}</b></div>
+    ${p.status === 'paid' ? `<div style="text-align:end"><button class="link" data-a="toast:PDF">${ic('download')} ${t('pay.download')}</button></div>` : ''}</div>`).join('')}</div>`;
+}
+
+// ---------------- scorer ----------------
+function vScorerHome(view) {
+  const mine = Object.values(MATCHES).filter((m) => m.scorers.includes('demo-scorer')).sort((a, b) => a.at - b.at);
+  const list = view === 'history' ? mine.filter((m) => m.status === 'completed') : view === 'live' ? mine.filter((m) => m.status === 'live') : view === 'upcoming' ? mine.filter((m) => m.status === 'scheduled') : mine.filter((m) => m.status !== 'completed');
+  const title = { today: t('home.myAssignments'), upcoming: t('nav.matches'), live: t('nav.score'), history: t('nav.history') }[view];
+  const pending = S.outbox.length;
+  const sync = !S.online ? ['cloud_off', t('errors.networkScoring'), 'var(--warn)'] : pending ? ['sync', t('common.syncing', { n: pending }), 'var(--four)'] : ['cloud_done', t('common.synced'), 'var(--primary)'];
+  return `${appbar(title, false, `<img class="logo" src="${LOGO}" alt="">`)}<div class="scroll pad stack" style="padding-bottom:20px">
+    ${view === 'today' ? `<div class="card row" style="cursor:default;background:color-mix(in srgb,${sync[2]} 10%,transparent)"><span class="ms" style="color:${sync[2]}">${sync[0]}</span><div class="grow small">${sync[1]}</div></div>` : ''}
+    ${list.length ? list.map((m) => view === 'history' ? matchCard(m) : `<div class="card" style="cursor:default"><div class="row"><div class="lbl grow">${esc(ton(TOURS[m.tid]))} · ${esc(m.stage || t('common.match', { n: m.no }))}</div>${m.status === 'live' ? live() : ''}</div>
+      <div style="font-weight:700;font-size:16px;margin-top:6px">${esc(tn(m.a))} ${t('common.vs')} ${esc(tn(m.b))}</div><div class="small muted">${matchTime(m.at)} · ${VENUES[m.venue]}</div>
+      <button class="btn" style="margin-top:12px" data-a="push:score:${m.id}">${ic(m.status === 'live' ? 'scoreboard' : 'play_arrow')} ${m.status === 'live' ? t('score.title') : t('score.start')}</button></div>`).join('') : empty('assignment', t('empty.noAssignments'))}</div>`;
+}
+
+const scorerEvents = (mid) => EV[mid].concat(S.outbox.filter((e) => e.matchId === mid));
+function scorerState(m) { return build(m, scorerEvents(m.id)); }
+function nextSeq(mid) { return scorerEvents(mid).reduce((a, e) => Math.max(a, e.seq), 0) + 1; }
+function commit(m, type, body, inningsNo) {
+  const st = scorerState(m), inn = cur(st);
+  const e = { id: uuid(), matchId: m.id, inningsNo: inningsNo || (inn ? inn.inningsNo : 1), seq: nextSeq(m.id), type, timestamp: Date.now(), deviceId: 'demo-phone', scorerUid: 'demo-scorer', ...body };
+  if (type !== 'void') {
+    const trial = JSON.parse(JSON.stringify(st));
+    try { COP.applyEvent(trial, e); } catch (err) { toast(t('score.rejected', { reason: err.message })); return false; }
+  }
+  S.outbox.push(e);
+  if (m.status === 'scheduled') m.status = 'live';
+  scheduleSync();
+  return true;
+}
+let syncTimer = null;
+function scheduleSync() {
+  if (!S.online || syncTimer) return;
+  syncTimer = setTimeout(() => {
+    syncTimer = null;
+    if (!S.online) return;
+    S.outbox.forEach((e) => { const arr = EV[e.matchId]; if (!arr.some((x) => x.id === e.id)) arr.push(e); }); // idempotent by id
+    S.outbox = [];
+    Object.values(MATCHES).forEach((m) => { if (m.status === 'live' && stateOf(m.id).result.type !== 'inProgress') m.status = 'completed'; });
+    render();
+  }, 900);
+}
+function syncChip() {
+  const [i, l, c] = !S.online ? ['cloud_off', t('common.offline'), 'var(--warn)'] : S.outbox.length ? ['sync', t('common.syncing', { n: S.outbox.length }), '#fff'] : ['cloud_done', '✓ ' + t('common.synced'), 'var(--ball)'];
+  return `<button class="syncchip" style="color:${c};border:0;cursor:pointer;font-family:inherit" data-a="toggle-online" title="Tap to toggle network">${ic(i)}${l}</button>`;
+}
+function vScore(p) {
+  const m = MATCHES[p.id], st = scorerState(m), inn = cur(st);
+  const sq = (tid) => TEAMS[tid].squad;
+  let body;
+  if (st.result.type !== 'inProgress') body = empty('emoji_events', t('score.matchComplete'), resultText(st), t('match.scorecard'), 'replace:match:' + m.id);
+  else if (!inn || (inn.complete && st.innings.length < 2)) {
+    const no = st.innings.length + 1, su = S.setup;
+    if (!su.bat || su.no !== no) { S.setup = { no, bat: no === 1 ? m.a : (st.innings[0].battingTeamId === m.a ? m.b : m.a) }; }
+    const s = S.setup, bowlT = s.bat === m.a ? m.b : m.a;
+    const pick = (key, ids, excl) => `<div style="font-weight:600;margin:16px 0 8px">${t('score.' + key)}</div><div class="chips">${ids.filter((x) => x !== excl).map((id) => `<button class="chip ${s[key] === id ? 'on' : ''}" data-a="setup:${key}:${id}">${esc(ps(id))}</button>`).join('')}</div>`;
+    body = `<div class="scroll pad" style="padding-top:16px;padding-bottom:24px"><h2 style="margin:0">${t('score.startInnings', { n: no })}</h2>
+      ${no === 1 ? `<div style="font-weight:600;margin:16px 0 8px">${t('score.battingTeam')}</div><div class="chips">${[m.a, m.b].map((id) => `<button class="chip ${s.bat === id ? 'on' : ''}" data-a="setup:bat:${id}">${esc(tn(id))}</button>`).join('')}</div>` : ''}
+      ${pick('striker', sq(s.bat), s.nonStriker)}${pick('nonStriker', sq(s.bat), s.striker)}${pick('openingBowler', sq(bowlT))}
+      <button class="btn" style="margin-top:22px" data-a="start-innings" ${s.striker && s.nonStriker && s.openingBowler ? '' : 'disabled'}>${ic('play_arrow')} ${t('score.start')}</button></div>`;
+  } else if (!inn.strikerId || !inn.nonStrikerId) {
+    const avail = sq(inn.battingTeamId).filter((id) => id !== inn.strikerId && id !== inn.nonStrikerId && (!inn.batters[id] || (inn.batters[id].retiredHurt && !inn.batters[id].isOut)));
+    body = pickerPanel(t('score.needBatter'), 'sports_cricket', avail, 'newbat');
+  } else if (!inn.bowlerId) {
+    const ids = sq(inn.bowlingTeamId); const used = inn.bowlingOrder.filter((x) => ids.includes(x));
+    body = pickerPanel(t('score.selectBowler'), 'sports_baseball', [...used, ...ids.filter((x) => !used.includes(x))], 'bowler', inn.lastOverBowlerId, (id) => { const b = inn.bowlers[id]; return b ? `${COP.oversText(b.balls)}-${b.maidens}-${b.runs}-${b.wickets}` : ''; });
+  } else {
+    const rrr = COP.requiredRunRate(inn, st.config);
+    const bat = (id) => { const b = inn.batters[id], on = id === inn.strikerId; return `<div class="batrow ${on ? 'st' : ''}">${on ? `<span class="ms f" style="color:var(--primary);font-size:18px">play_arrow</span>` : '<span style="width:18px"></span>'}<div class="grow ell" style="font-weight:${on ? 800 : 600}">${esc(pn(id))}</div><b class="num" style="font-size:17px">${b.runs}</b><span class="small muted num">(${b.balls})</span><span class="small muted num" style="width:60px;text-align:end">${b.fours}×4 ${b.sixes}×6</span></div>`; };
+    const bw = inn.bowlers[inn.bowlerId];
+    body = `<div class="pad" style="padding-top:8px">
+      <div class="row small" style="gap:14px"><span>${t('common.crr')} <b class="num">${COP.runRate(inn.total, inn.legalBalls).toFixed(2)}</b></span>${inn.target ? `<span>${t('common.target')} <b class="num">${inn.target}</b></span>` : ''}${rrr != null ? `<span>${t('common.rrr')} <b class="num">${rrr.toFixed(2)}</b></span>` : ''}</div>
+      ${inn.target ? `<div class="small" style="color:var(--primary);font-weight:700">${esc(situation(st))}</div>` : ''}
+      <div style="margin-top:6px">${bat(inn.strikerId)}${bat(inn.nonStrikerId)}</div>
+      <div class="row" style="border-top:1px solid var(--divider);margin-top:6px;padding-top:8px">${ic('sports_baseball')}<div class="grow ell" style="font-weight:600">${esc(pn(inn.bowlerId))}</div><span class="num small">${COP.oversText(bw.balls)} ov · ${bw.runs} r · ${bw.wickets} w</span></div>
+      <div style="margin-top:8px">${ballsRow(inn)}</div></div>
+      <div style="flex:1"></div>
+      <div class="pad3"><div class="g3">${[0, 1, 2, 3, 4, 6].map((r) => `<button class="sbtn" style="${r === 4 ? 'background:var(--four)' : r === 6 ? 'background:var(--six)' : ''}" data-a="runs:${r}">${r}</button>`).join('')}</div>
+        <div class="g4">${[['wide', 'score.wide'], ['noBall', 'score.noBall'], ['bye', 'score.bye'], ['legBye', 'score.legBye']].map(([x, k]) => `<button class="sbtn o" data-a="extra:${x}">${t(k)}</button>`).join('')}</div>
+        <div style="display:grid;grid-template-columns:2fr 3fr;gap:10px"><button class="sbtn o" style="height:62px" data-a="undo">${ic('undo')} ${t('score.undo')}</button><button class="sbtn" style="background:var(--wkt);font-size:20px;height:62px;font-family:inherit" data-a="wicket">${t('score.wicket')}</button></div></div>`;
+  }
+  return `<div class="header" style="padding-bottom:12px"><div class="row"><button class="iconbtn" data-a="back">${ic('arrow_back', 'flip')}</button>${m.status === 'live' ? live().replace('class="live"', 'class="live" style="background:rgba(255,255,255,.15);color:#fff"') : ''}<div class="grow"></div>${syncChip()}<button class="iconbtn" data-a="scorer-menu">${ic('more_vert')}</button></div>
+    <div class="row" style="align-items:flex-end;padding:4px 8px 0">${inn ? `<div style="font-weight:900;font-size:20px">${tsn(inn.battingTeamId)}</div><div class="num" style="font-size:40px;font-weight:900;line-height:1">${inn.total}/${inn.wickets}</div><div class="small num" style="opacity:.75;padding-bottom:4px">${COP.oversText(inn.legalBalls)} / ${m.overs} ${t('common.ov')}</div>` : `<div style="font-weight:800;font-size:20px">${tsn(m.a)} v ${tsn(m.b)}</div>`}</div></div>
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto">${body}</div>`;
+}
+function pickerPanel(title, icon, ids, act, disabled, trail) {
+  return `<div class="pad row" style="padding-top:14px;padding-bottom:8px">${ic(icon)}<div style="font-weight:700">${title}</div></div>
+    <div class="scroll pad stack" style="padding-bottom:12px">${ids.map((id) => `<div class="card row" style="padding:10px 14px;${id === disabled ? 'opacity:.35;pointer-events:none' : ''}" data-a="${act}:${id}">${avatar(id, 36)}<div class="grow" style="font-weight:600">${esc(pn(id))}</div><span class="small muted num">${trail ? trail(id) : ''}</span></div>`).join('')}</div>
+    <button class="link" style="padding:12px" data-a="undo">${ic('undo')} ${t('score.undo')}</button>`;
+}
+function vSheet() {
+  const sh = S.sheet; if (!sh) return '';
+  let inner = '';
+  if (sh.type === 'extra') {
+    const opts = sh.extra === 'wide' ? [0, 1, 2, 3, 4] : sh.extra === 'noBall' ? [0, 1, 2, 3, 4, 6] : [1, 2, 3, 4];
+    inner = `<h4>${t('score.runsOff', { extra: t('score.' + sh.extra) })}</h4><div class="chips">${opts.map((r) => `<button class="sbtn o" style="width:64px;height:64px;font-size:22px;font-family:Inter" data-a="extra-runs:${r}">${sh.extra === 'wide' || sh.extra === 'noBall' ? '+' : ''}${r}</button>`).join('')}</div>`;
+  } else if (sh.type === 'wicket') {
+    const m = MATCHES[sh.mid], st = scorerState(m), inn = cur(st);
+    const kinds = ['bowled', 'caught', 'lbw', 'runOut', 'stumped', 'hitWicket', 'retiredOut', 'other'];
+    const field = inn.bowlingTeamId, avail = TEAMS[inn.battingTeamId].squad.filter((id) => id !== inn.strikerId && id !== inn.nonStrikerId && !inn.batters[id]);
+    const last = inn.wickets + 1 >= m.pps - 1 || !avail.length;
+    const needF = ['caught', 'runOut', 'stumped'].includes(sh.kind), chooseBat = sh.kind === 'runOut' || sh.kind === 'retiredOut';
+    const ok = sh.kind && (!needF || sh.fielder || sh.kind === 'runOut') && (last || sh.next);
+    inner = `<h4>${t('score.wicketType')}</h4><div class="chips">${kinds.map((k) => `<button class="chip ${sh.kind === k ? 'on' : ''}" data-a="wk:kind:${k}">${t('wicket.' + k)}</button>`).join('')}</div>
+      ${chooseBat ? `<div style="font-weight:600;margin:14px 0 8px">${t('score.dismissed')}</div><div class="chips">${[inn.strikerId, inn.nonStrikerId].map((id) => `<button class="chip ${sh.dismissed === id ? 'on' : ''}" data-a="wk:dismissed:${id}">${esc(ps(id))}</button>`).join('')}</div>` : ''}
+      ${sh.kind === 'runOut' ? `<div style="font-weight:600;margin:14px 0 8px">${t('score.runsCompleted')}</div><div class="chips">${[0, 1, 2, 3].map((r) => `<button class="chip ${sh.runs === r ? 'on' : ''}" data-a="wk:runs:${r}">${r}</button>`).join('')}</div>` : ''}
+      ${needF ? `<div style="font-weight:600;margin:14px 0 8px">${t('score.fielder')}</div><div class="chips">${TEAMS[field].squad.map((id) => `<button class="chip ${sh.fielder === id ? 'on' : ''}" data-a="wk:fielder:${id}">${esc(ps(id))}</button>`).join('')}</div>` : ''}
+      ${!last ? `<div style="font-weight:600;margin:14px 0 8px">${t('score.replacement')}</div><div class="chips">${avail.map((id) => `<button class="chip ${sh.next === id ? 'on' : ''}" data-a="wk:next:${id}">${esc(ps(id))}</button>`).join('')}</div>` : ''}
+      <button class="btn" style="margin-top:20px" data-a="wk-save" ${ok ? '' : 'disabled'}>${t('common.save')}</button>`;
+  } else if (sh.type === 'menu') {
+    inner = `<div class="list">${[['swap', 'swap_horiz', 'score.swap'], ['end', 'stop_circle', 'score.endInnings'], ['broadcast', 'live_tv', 'score.broadcast'], ['center', 'scoreboard', 'match.scorecard']].map(([a, i, k]) => `<div class="row" style="cursor:pointer;padding:14px 4px" data-a="menu:${a}">${ic(i)}${t(k)}</div>`).join('')}</div>`;
+  } else if (sh.type === 'broadcast') {
+    inner = `<h4>${t('score.broadcast')}</h4><div class="small">${t('score.broadcastBody')}</div><div dir="ltr" class="num small" style="background:var(--chip);padding:12px;border-radius:8px;margin:14px 0;word-break:break-all">https://criconpro.app/overlay/?t=Xk3…q9</div>
+      <div style="border-radius:10px;overflow:hidden;background:#3f5a4c;padding:10px"><div style="background:linear-gradient(90deg,#0b4d2a 14%,#13924a 14% 45%,#fff 45% 82%,#0b4d2a 82%);height:26px;border-radius:6px;display:flex;align-items:center;font-size:9px;font-weight:800;color:#fff;font-family:Inter;padding:0 6px;gap:10px"><span>COP</span><span>DHA 128/4</span><span style="color:#0e1a14;margin-inline-start:22%">A. Raza 48*</span></div></div>
+      <button class="btn" style="margin-top:14px" data-a="copy:https://criconpro.app/overlay/">${ic('content_copy')} ${t('common.copy')}</button>`;
+  }
+  return `<div class="scrim" data-a="close-sheet"><div class="sheet" data-stop="1"><div class="handle"></div>${inner}</div></div>`;
+}
+
+// ---------------- render ----------------
+function toast(msg) { S.toast = msg; render(); clearTimeout(toast.tm); toast.tm = setTimeout(() => { S.toast = null; render(); }, 2200); }
+function flash(kind) { S.flash = { kind, k: Date.now() }; render(); setTimeout(() => { S.flash = null; render(); }, 950); }
+const topV = () => S.stack[S.stack.length - 1];
+
+function render() {
+  const sc = $app.querySelector('.scroll'), key = sc && sc.dataset.k, pos = sc ? sc.scrollTop : 0;
+  $app.className = S.dark ? 'dark' : '';
+  document.documentElement.className = S.dark ? 'dark' : '';
+  $app.setAttribute('dir', S.lang === 'ur' ? 'rtl' : 'ltr');
+  $app.setAttribute('lang', S.lang);
+  let html;
+  if (!S.onbDone) html = vOnboarding();
+  else if (!S.user) html = topV() && topV().v === 'otp' ? vOtp() : vLogin();
+  else if (topV()) {
+    const v = topV();
+    html = { match: vMatch, tour: vTournament, team: vTeam, player: vPlayer, score: vScore, subscription: vSubscription, plans: vPlans, checkout: vCheckout, payments: vPayments }[v.v](v);
+  } else {
+    const tabs = isScorer()
+      ? [['home', 'home', 'nav.home'], ['smatches', 'event_note', 'nav.matches'], ['sscore', 'scoreboard', 'nav.score'], ['shistory', 'history', 'nav.history'], ['profile', 'person', 'nav.profile']]
+      : [['home', 'home', 'nav.home'], ['tournaments', 'emoji_events', 'nav.tournaments'], ['live', 'sensors', 'nav.live'], ['rankings', 'leaderboard', 'nav.rankings'], ['profile', 'person', 'nav.profile']];
+    if (!tabs.some((x) => x[0] === S.tab)) S.tab = 'home';
+    const view = { home: vHome, tournaments: vTournaments, live: vLive, rankings: vRankings, profile: vProfile, smatches: () => vScorerHome('upcoming'), sscore: () => vScorerHome('live'), shistory: () => vScorerHome('history') }[S.tab]();
+    html = `<div style="flex:1;display:flex;flex-direction:column;min-height:0">${view}</div><nav class="nav">${tabs.map(([k, i, l]) => `<button class="${S.tab === k ? 'on' : ''}" data-a="tab:${k}"><span class="ic"><span class="ms ${S.tab === k ? 'f' : ''}">${i}</span></span>${t(l)}</button>`).join('')}</nav>`;
+  }
+  const fl = S.flash ? `<div class="flash"><div style="background:${S.flash.kind === 'W' ? 'var(--wkt)' : S.flash.kind === '6' ? 'var(--six)' : 'var(--four)'}">${S.flash.kind === 'W' ? t('score.wicket') : S.flash.kind === '6' ? 'SIX' : 'FOUR'}</div></div>` : '';
+  const active = document.activeElement && document.activeElement.id;
+  const activeVal = active && document.activeElement.value;
+  $app.innerHTML = html + vSheet() + fl + (S.toast ? `<div class="toast">${esc(S.toast)}</div>` : '');
+  const nsc = $app.querySelector('.scroll');
+  if (nsc && key && nsc.dataset.k === key) nsc.scrollTop = pos;
+  if (active) { const el = document.getElementById(active); if (el) { el.value = activeVal; el.focus(); } }
+  const rf = document.getElementById('receipt');
+  if (rf) rf.onchange = () => { if (rf.files[0]) { S.checkout.file = rf.files[0].name; render(); } };
+}
+
+function push(v) { S.stack.push(v); S.sheet = null; render(); const s = $app.querySelector('.scroll'); if (s) s.scrollTop = 0; }
+function back() { S.stack.pop(); S.sheet = null; render(); }
+
+$app.addEventListener('click', (ev) => {
+  const stop = ev.target.closest('[data-stop]');
+  const el = ev.target.closest('[data-a]');
+  if (!el) return;
+  if (stop && !stop.contains(el)) return;
+  if (el.dataset.a === 'close-sheet' && stop) return;
+  const [a, ...args] = el.dataset.a.split(':');
+  const arg = args.join(':');
+  const m = topV() && topV().v === 'score' ? MATCHES[topV().id] : null;
+  switch (a) {
+    case 'noop': return;
+    case 'back': return S.user ? back() : (S.stack = [], render());
+    case 'onb-next': if (S.onb >= 5) { S.onbDone = true; } else S.onb++; return render();
+    case 'onb-skip': S.onb = 5; return render();
+    case 'lang': S.lang = arg; return render();
+    case 'dark': S.dark = !S.dark; return render();
+    case 'send-otp': {
+      const v = document.getElementById('phone').value.replace(/\D/g, '').replace(/^92/, '').replace(/^0/, '');
+      if (v.length !== 10 || v[0] !== '3') { document.getElementById('perr').textContent = t('auth.phoneInvalid'); return; }
+      S.phone = '+92 ' + v.slice(0, 3) + ' ' + v.slice(3); S.stack = [{ v: 'otp' }]; return render();
+    }
+    case 'verify-otp': {
+      if (document.getElementById('otp').value !== '123456') { document.getElementById('oerr').textContent = t('auth.otpInvalid'); return; }
+      S.user = { name: 'Hamza Ali', role: 'spectator', phone: S.phone }; S.stack = []; S.tab = 'home'; return render();
+    }
+    case 'demo-role': {
+      const names = { spectator: 'Hamza Ali', scorer: 'Official Scorer', player: 'Ahmed Raza', teamManager: 'Naveed Akhtar', organizer: 'Tournament Organizer', superAdmin: 'COP Admin' };
+      S.user = { name: names[arg], role: arg, phone: S.phone || '+92 300 1234567' }; S.stack = []; S.tab = arg === 'scorer' || !S.tab ? 'home' : S.tab; return render();
+    }
+    case 'logout': S.user = null; S.stack = []; return render();
+    case 'tab': S.tab = arg; S.stack = []; render(); { const s = $app.querySelector('.scroll'); if (s) s.scrollTop = 0; } return;
+    case 'push': { const [v, id] = arg.split(':'); return push({ v, id }); }
+    case 'replace': { const [v, id] = arg.split(':'); S.stack.pop(); return push({ v, id }); }
+    case 'open-match': return push({ v: 'match', id: arg });
+    case 'open-tour': return push({ v: 'tour', id: arg });
+    case 'open-team': return push({ v: 'team', id: arg });
+    case 'open-player': return push({ v: 'player', id: arg });
+    case 'subtab': { const i = arg.lastIndexOf(':'); S.subTab[arg.slice(0, i)] = arg.slice(i + 1); return render(); }
+    case 'innsel': { const [mid, i] = arg.split(':'); S.subTab['inn-' + mid] = +i; return render(); }
+    case 'rank': S.rankCat = +arg; return render();
+    case 'rtour': S.rankTour = arg; return render();
+    case 'toast': return toast(arg);
+    case 'copy': try { navigator.clipboard.writeText(arg); } catch (e) {} return toast(t('common.copied'));
+    case 'share': return toast(t('match.shareText', { a: tsn(MATCHES[arg].a), b: tsn(MATCHES[arg].b), link: 'criconpro.app/m/' + arg }));
+    case 'checkout': S.checkout = { plan: arg, method: 'bankTransfer' }; return push({ v: 'checkout' });
+    case 'method': S.checkout.method = arg; return render();
+    case 'pay-next':
+      if (S.checkout.method === 'card') return toast(t('pay.cardUnavailable'));
+      S.checkout.ref = 'COP-' + Math.random().toString(36).slice(2, 8).toUpperCase(); return render();
+    case 'pay-submit': {
+      const p = PLANS.find((x) => x.id === S.checkout.plan);
+      PAYMENTS.unshift({ inv: 'INV-' + S.checkout.ref, plan: p.en, amt: p.price, method: 'pay.' + S.checkout.method, status: 'pending', date: new Date() });
+      S.checkout.done = true; return render();
+    }
+    case 'cancel-sub': SUB.status = 'cancelled'; return render();
+    // ---- scorer ----
+    case 'toggle-online': S.online = !S.online; if (S.online) scheduleSync(); return toast(S.online ? t('common.syncing', { n: S.outbox.length }) : t('errors.networkScoring'));
+    case 'setup': { const [k, v] = arg.split(':'); S.setup[k] = v; if (k === 'bat') { S.setup.striker = S.setup.nonStriker = S.setup.openingBowler = null; } return render(); }
+    case 'start-innings': { const s = S.setup; commit(m, 'inningsStart', { inningsStart: { battingTeamId: s.bat, bowlingTeamId: s.bat === m.a ? m.b : m.a, strikerId: s.striker, nonStrikerId: s.nonStriker, bowlerId: s.openingBowler } }, s.no); S.setup = {}; return render(); }
+    case 'runs': { const r = +arg; if (commit(m, 'delivery', { delivery: { runs: r, extra: null, boundary: r === 4 || r === 6 } }) && (r === 4 || r === 6)) return flash(String(r)); return render(); }
+    case 'extra': S.sheet = { type: 'extra', extra: arg }; return render();
+    case 'extra-runs': { const r = +arg, x = S.sheet.extra; S.sheet = null; commit(m, 'delivery', { delivery: { runs: r, extra: x, boundary: (r === 4 || r === 6) && x === 'noBall' } }); return render(); }
+    case 'wicket': { const inn = cur(scorerState(m)); S.sheet = { type: 'wicket', mid: m.id, kind: null, dismissed: inn.strikerId, fielder: null, next: null, runs: 0 }; return render(); }
+    case 'wk': { const [k, v] = arg.split(':'); S.sheet[k] = k === 'runs' ? +v : v; if (k === 'kind') { const inn = cur(scorerState(m)); if (v !== 'runOut' && v !== 'retiredOut') S.sheet.dismissed = inn.strikerId; if (v === 'caught' && !S.sheet.fielder) S.sheet.fielder = inn.bowlerId; } return render(); }
+    case 'wk-save': {
+      const sh = S.sheet; S.sheet = null;
+      const needF = ['caught', 'runOut', 'stumped'].includes(sh.kind);
+      let ok;
+      if (sh.kind === 'retiredOut') ok = commit(m, 'retire', { retire: { batterId: sh.dismissed, kind: 'retiredOut', newBatterId: sh.next } });
+      else ok = commit(m, 'delivery', { delivery: { runs: sh.kind === 'runOut' ? sh.runs : 0, extra: null, boundary: false, wicket: { kind: sh.kind, dismissedId: sh.dismissed, fielderId: needF ? sh.fielder : null, newBatterId: sh.next } } });
+      if (ok) return flash('W'); return render();
+    }
+    case 'newbat': commit(m, 'newBatter', { newBatter: { batterId: arg } }); return render();
+    case 'bowler': commit(m, 'bowlerChange', { bowlerChange: { bowlerId: arg } }); return render();
+    case 'undo': {
+      const eff = COP.effectiveEvents(scorerEvents(m.id));
+      if (!eff.length) return;
+      const last = eff[eff.length - 1];
+      commit(m, 'void', { void: { targetId: last.id } }, last.inningsNo); return toast(t('score.undone'));
+    }
+    case 'scorer-menu': S.sheet = { type: 'menu' }; return render();
+    case 'menu':
+      S.sheet = null;
+      if (arg === 'swap') commit(m, 'swapStrike', {});
+      if (arg === 'end') commit(m, 'endInnings', { endInnings: { reason: 'declared' } });
+      if (arg === 'broadcast') S.sheet = { type: 'broadcast' };
+      if (arg === 'center') return push({ v: 'match', id: m.id });
+      return render();
+    case 'close-sheet': S.sheet = null; return render();
+  }
+});
+$app.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  if (e.target.id === 'phone') $app.querySelector('[data-a="send-otp"]').click();
+  if (e.target.id === 'otp') $app.querySelector('[data-a="verify-otp"]').click();
+});
+
+// Live spectator feed: the Sixes match keeps ticking like a real broadcast.
+setInterval(() => {
+  const m = MATCHES['m-ess-4'];
+  if (m.status !== 'live') return;
+  const before = liveSim.events.length;
+  while (liveSim.step()) if (liveSim.events[liveSim.events.length - 1].type === 'delivery') break;
+  EV[m.id].push(...liveSim.events.slice(before));
+  if (liveSim.st.result.type !== 'inProgress') m.status = 'completed';
+  const v = topV();
+  const inputFocused = document.activeElement && document.activeElement.tagName === 'INPUT';
+  if (!S.sheet && !S.flash && !inputFocused && (!v || v.v === 'match' || v.v === 'tour')) render();
+}, 6000);
+
+// If the icon font can't load (offline / blocked), hide icon ligature text instead of showing words.
+if (document.fonts && document.fonts.load) {
+  document.fonts.load('22px "Material Symbols Rounded"', 'home').then((faces) => {
+    if (!faces.length) document.body.classList.add('noicons');
+  }).catch(() => document.body.classList.add('noicons'));
+}
+render();
+
+</script>
+</body>
+</html>
